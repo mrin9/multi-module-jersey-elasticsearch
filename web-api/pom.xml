@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.mrin</groupId>
+        <artifactId>app-root</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <groupId>com.mrin</groupId>
+    <artifactId>web-api</artifactId>
+    <packaging>war</packaging>  
+    <version>1.0.0</version>    
+
+    <!-- If There are any private jars that you want to keep in the local repo 
+    
+    1. 
+    Deploy  my-private-jar.jar in local repository 
+    mvn deploy:deploy-file -Durl=file://repo -Dfile=my-private-jar.jar -DgroupId=com.mrin -DartifactId=my-jar -Dversion=1.0 -Dpackaging=jar 
+    
+    2. Define the repository as shown below
+    <repositories>
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/repo</url>
+        </repository>
+    </repositories>
+
+    3. Include the jar in dependencies section (shown below)
+    -->
+
+    <!-- Properties -->
+    <properties>
+        <jersey-version>2.26</jersey-version>
+        <swagger-version>1.5.17</swagger-version>
+        <jackson-version>2.9.2</jackson-version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+  
+    <!-- Dependencies -->
+    <dependencies>
+        
+        <!-- Get the Jars from local repo 
+        <dependency>
+            <groupId>com.mrin</groupId>
+            <artifactId>my-jar</artifactId>
+            <version>1.0</version>
+        </dependency>
+        -->
+
+        <!-- Servlet "provided" by Container (Tomcat, Jetty etc. ) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope> <!-- Use provided -->
+        </dependency>
+                
+        <!-- Jars build from other projects within this module -->
+        <dependency>
+            <groupId>com.mrin</groupId>
+            <artifactId>search-engine</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
+        <!-- Jersey -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey-version}</version>
+        </dependency>
+
+        <!-- Jackson (Used by this App, Jersey, Log4J) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
+        <!-- Swagger -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey2-jaxrs</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger-version}</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Build -->
+    <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+  
+  
+</project>

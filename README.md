@@ -1,0 +1,3 @@
+# Maven base multi module app with ElasticSearch
+
+Work in Progress ...
