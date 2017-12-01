@@ -1,10 +1,10 @@
-package com.app.api.authentication;
+package com.app.api.login;
 
 import com.app.api.BaseController;
-import com.app.model.BaseResponse;
-import com.app.model.authentication.LoginInputModel;
-import com.app.model.authentication.LoginOutputModel;
-import com.app.model.authentication.LoginResponse;
+import com.app.model.response.BaseResponse;
+import com.app.model.login.LoginInputModel;
+import com.app.model.login.LoginOutputModel;
+import com.app.model.login.LoginResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
@@ -21,7 +21,7 @@ import javax.ws.rs.GET;
 
 @Path ("/auth")
 @Api(value = "1st authenticate your self")
-public class AuthenticationController extends BaseController{
+public class LoginController extends BaseController{
     
     
     @POST	

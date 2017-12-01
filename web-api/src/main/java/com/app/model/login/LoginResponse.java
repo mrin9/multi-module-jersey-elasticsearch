@@ -1,6 +1,6 @@
-package com.app.model.authentication;
+package com.app.model.login;
 
-import com.app.model.BaseResponse;
+import com.app.model.response.BaseResponse;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "LoginResponseModel", description="Login response object")

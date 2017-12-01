@@ -1,4 +1,4 @@
-package com.app.model;
+package com.app.model.response;
 import io.swagger.annotations.ApiModelProperty;
 
 public class BaseResponse {

@@ -1,4 +1,4 @@
-package com.app.model.authentication;
+package com.app.model.login;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
