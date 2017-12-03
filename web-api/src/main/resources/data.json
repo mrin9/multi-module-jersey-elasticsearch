@@ -1,0 +1,9 @@
+{ "create" : {} }
+{ "productId": "P1", "productName":"ProdName1", "listPrice": 10, "reorderLevel": 5, "unit":"peice" }
+{ "create" : {} }
+{ "productId": "P2", "productName":"ProdName2", "listPrice": 20, "reorderLevel": 2, "unit":"peice" }
+{ "create" : {} }
+{ "productId": "P3", "productName":"ProdName3", "listPrice": 30, "reorderLevel": 7, "unit":"peice" }
+{ "create" : {} }
+{ "productId": "P4", "productName":"ProdName4", "listPrice": 10, "reorderLevel": 6, "unit":"peice" }
+

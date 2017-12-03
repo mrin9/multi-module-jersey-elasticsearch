@@ -1,0 +1,86 @@
+{
+  "products_index":{
+    "settings":{"number_of_shards":1},
+    "mappings":{
+      "products":{
+        "properties":{
+            "productId"    : { "type": "text" },            
+            "productName"  : { "type": "text" },            
+            "listPrice"    : { "type": "long"   },            
+            "reorderLevel" : { "type": "long"   },            
+            "unit"         : { "type": "text" }
+        }
+      }
+    }
+  },
+ 
+ 
+  "users_index":{
+    "settings":{"number_of_shards":1},
+    "mappings":{
+      "users":{
+        "properties":{
+            "username" : { "type": "text" },            
+            "password" : { "type": "text" },            
+            "isActive" : { "type": "long"   }            
+        }
+      }
+    }
+  },
+      
+  "custiomer_index":{
+    "settings":{"number_of_shards":1},
+    "mappings":{
+      "users":{
+        "properties":{
+          "customerId"   : { "type": "text" },            
+          "customerName" : { "type": "text" },            
+          "customerEmail": { "type": "long"   },   
+          "address1"   :{"type": "text" },
+          "address2"   :{"type": "text" },
+          "postal"     :{"type": "text" },
+          "city"       :{"type": "text" },
+          "country"    :{"type": "text" }
+        }
+      }
+    }
+  },                     
+                          
+                               
+  "orders_index":{
+    "settings":{
+      "number_of_shards":1
+    },
+    "mappings":{
+      "orders":{
+        "properties":{
+          "orderId"    :{"type": "text" },
+          "empId"      :{"type": "text" },
+          "custId"     :{"type": "text" },
+          "orderStatus":{"type": "date" },
+          "paymentType":{"type": "date" },
+          "orderDate"  :{"type": "date" },
+          "shippedDate":{"type": "date" },
+          "address1"   :{"type": "text" },
+          "address2"   :{"type": "text" },
+          "postal"     :{"type": "text" },
+          "city"       :{"type": "text" },
+          "country"    :{"type": "text" },
+          "orderLines" :  {    
+            "type"     :  "nested",  
+            "properties": {
+               "productId"    : { "type": "text" },            
+               "productName"  : { "type": "text" },            
+               "quantity"     : { "type": "integer"},            
+               "price"        : { "type": "long"   },            
+               "customerId"   : { "type": "text" },
+               "customerName" : { "type": "text" },
+               "customerEmail": { "type": "text" }
+            }
+          }  
+        }
+      }
+    }
+  }
+
+}

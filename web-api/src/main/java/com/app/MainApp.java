@@ -10,14 +10,13 @@ import com.app.FolderMonitorService;
 import com.app.config.ElasticClient;
 import com.app.config.InitData;
 import lombok.extern.log4j.Log4j2;
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.RestClient;
 
 
 //@ApplicationPath("api") // (Dont work in a .jar may work in .war )
 @Log4j2
 public class MainApp extends ResourceConfig {
 
-   public static TransportClient elasticClient;
    
    public MainApp(@Context ServletContext servletContext) throws Exception {
         log.info("*** Jersey Init ***");
@@ -44,7 +43,7 @@ public class MainApp extends ResourceConfig {
         //FolderMonitorService.start("", 30000);
         
         log.info("\n *** Connect To ElasticSearch *** \n");
-        elasticClient = ElasticClient.connect();
+        ElasticClient.init();  // TODO: ensure its called only once
         InitData.createIndex();
         
     }
