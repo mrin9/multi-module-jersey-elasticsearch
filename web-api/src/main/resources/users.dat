@@ -1,0 +1,4 @@
+{ "create" : {"_id": "1"} }
+{"userId":"demo", "password":"demo", "userName":"Mrinmoy Majumdar", "email":"demo@example.com","role":"admin", "isActive":"true"}
+{ "create" : {"_id": "2"} }
+{"userId":"user", "user":"user","userName":"Daniel Martin", "email":"user@example.com","role":"user", "isActive":"true"}

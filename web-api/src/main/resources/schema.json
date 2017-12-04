@@ -3,6 +3,7 @@
     "settings":{"number_of_shards":1},
     "mappings":{
       "products":{
+        "dynamic"   :"strict",        
         "properties":{
             "productId"    : { "type": "text" },            
             "productName"  : { "type": "text" },            
@@ -19,10 +20,14 @@
     "settings":{"number_of_shards":1},
     "mappings":{
       "users":{
+        "dynamic"   :"strict",        
         "properties":{
-            "username" : { "type": "text" },            
+            "userId"   : { "type": "text" },            
             "password" : { "type": "text" },            
-            "isActive" : { "type": "long"   }            
+            "userName" : { "type": "text" },            
+            "email"    : { "type": "text" },            
+            "role"     : { "type": "text" },
+            "isActive" : { "type": "boolean" }            
         }
       }
     }
@@ -32,6 +37,7 @@
     "settings":{"number_of_shards":1},
     "mappings":{
       "users":{
+        "dynamic"   :"strict",        
         "properties":{
           "customerId"   : { "type": "text" },            
           "customerName" : { "type": "text" },            
@@ -53,6 +59,7 @@
     },
     "mappings":{
       "orders":{
+        "dynamic"   : "strict",        
         "properties":{
           "orderId"    :{"type": "text" },
           "empId"      :{"type": "text" },

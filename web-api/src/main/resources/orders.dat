@@ -1,0 +1,4 @@
+{ "create" : {"_id": "1"} }
+{ "orderId": "O1", "empId":"E1", "orderLines":[{"productId":"P1", "quantity":7},{"productId":"P2","quantity":5 }]}
+{ "create" : {"_id": "2"} }
+{ "orderId": "O2", "empId":"E2"}

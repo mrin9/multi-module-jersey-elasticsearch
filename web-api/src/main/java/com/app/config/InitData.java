@@ -24,22 +24,21 @@ public class InitData {
         try {
             
             String schemaJsonUrl = InitData.class.getClassLoader().getResource("schema.json").getFile();
-            String dataJsonUrl   = InitData.class.getClassLoader().getResource("data.json").getFile();
-            Path   dataJsonPath = Paths.get(dataJsonUrl);
-
+            String dataJsonUrl;
+            Path   dataJsonPath;
             
             String submitStr="";
             Response elResp;
-             
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File(schemaJsonUrl));
-            String stringFromFile = new String(Files.readAllBytes(dataJsonPath));
+            Map<String, String> urlParams = Collections.emptyMap();
+            HttpEntity submitJsonEntity;
+            
             //First Delete all indexes
             elResp = ElasticClient.rest.performRequest("DELETE", "/*");
             
             //Create Index Order
-            Map<String, String> urlParams = Collections.emptyMap();
-            HttpEntity submitJsonEntity;
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(new File(schemaJsonUrl));
+
             //Create Indices
             /* Sample of submit string while creating index
             submitStr =  "{" 
@@ -81,7 +80,34 @@ public class InitData {
             submitStr = objectMapper.writeValueAsString(rootNode.get("orders_index"));
             submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
             elResp = ElasticClient.rest.performRequest("PUT", "/orders", urlParams, submitJsonEntity);
+            
 
+            // Insert Data into Users index
+            dataJsonUrl  = InitData.class.getClassLoader().getResource("users.dat").getFile();
+            dataJsonPath  = Paths.get(dataJsonUrl);
+            submitStr = new String(Files.readAllBytes(dataJsonPath));
+            submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
+            elResp = ElasticClient.rest.performRequest("POST", "/users/users/_bulk", urlParams, submitJsonEntity);
+            log.info("Response Code For Users Insert: " + elResp.getStatusLine().getStatusCode() );
+
+
+            // Insert Data into Products index
+            dataJsonUrl  = InitData.class.getClassLoader().getResource("products.dat").getFile();
+            dataJsonPath  = Paths.get(dataJsonUrl);
+            submitStr = new String(Files.readAllBytes(dataJsonPath));
+            submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
+            elResp = ElasticClient.rest.performRequest("POST", "/products/products/_bulk", urlParams, submitJsonEntity);
+            log.info("Response Code For Product Insert: " + elResp.getStatusLine().getStatusCode() );
+
+            // Insert Data into Orders index
+            dataJsonUrl  = InitData.class.getClassLoader().getResource("orders.dat").getFile();
+            dataJsonPath  = Paths.get(dataJsonUrl);
+            submitStr = new String(Files.readAllBytes(dataJsonPath));
+            submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
+            elResp = ElasticClient.rest.performRequest("POST", "/orders/orders/_bulk", urlParams, submitJsonEntity);
+            log.info("Response Code For Product Insert: " + elResp.getStatusLine().getStatusCode() );
+            
+            
             
         }
         catch (IOException ex) {
