@@ -1,5 +1,6 @@
 package com.app.model.login;
 
+import com.app.model.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,6 +12,10 @@ public class LoginOutputModel {
     private String role;
     private String token;
 
+    public LoginOutputModel(User user, String token) {
+        this(user.getUserName(),user.getEmail(), user.getRole().toString(), token);
+    }
+
     public LoginOutputModel(String username, String emailAddresss, String role, String token) {
         super();
         this.username = username;
@@ -18,6 +23,7 @@ public class LoginOutputModel {
         this.role = role;
         this.token = token;
     }
+    
     public String getUsername() {return username;}
     public void setUsername(String username) {this.username = username;}
 

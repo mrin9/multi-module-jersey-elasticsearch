@@ -6,18 +6,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
 
 public class TokenService {
     
     private static final long VALIDITY_TIME_MS =  2 * 60 * 60 * 1000; // 2 hours  validity
     private static final String AUTH_HEADER_NAME = "Authorization";
-
-    private String secret="mrin";
+    private static final String secret="mrin";
 
     //Get User Info from the Token
-    public User parseUserFromToken(String token){
+    public static User parseUserFromToken(String token){
         Claims claims = Jwts.parser()
             .setSigningKey(secret)
             .parseClaimsJws(token)
@@ -29,12 +26,12 @@ public class TokenService {
         return user;
     }
 
-    public String createTokenForUser(User user) {
+    public static String createTokenForUser(User user) {
       return Jwts.builder()
         .setExpiration(new Date(System.currentTimeMillis() + VALIDITY_TIME_MS))
         .setSubject(user.getUserName())
         .claim("userId", user.getUserId())
-        .claim("role", user.getRole().toString())
+        .claim("role", user.getRole().toString().toUpperCase())
         .signWith(SignatureAlgorithm.HS256, secret)
         .compact();
     }

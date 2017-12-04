@@ -1,4 +1,6 @@
 { "create" : {"_id": "1"} }
-{"userId":"demo", "password":"demo", "userName":"Mrinmoy Majumdar", "email":"demo@example.com","role":"admin", "isActive":"true"}
+{"userId":"demo", "password":"demo", "userName":"Mrinmoy Majumdar", "email":"demo@example.com","role":"ADMIN", "isActive":"true"}
 { "create" : {"_id": "2"} }
-{"userId":"user", "user":"user","userName":"Daniel Martin", "email":"user@example.com","role":"user", "isActive":"true"}
+{"userId":"user1", "password":"user1","userName":"John Martin", "email":"user1@example.com","role":"USER", "isActive":"true"}
+{ "create" : {"_id": "3"} }
+{"userId":"user2", "password":"user2","userName":"John Robin",  "email":"user2@example.com","role":"USER", "isActive":"true"}

@@ -2,22 +2,17 @@ package com.app.model.login;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
-@ApiModel(value = "LoginInputModel", description="Login object")
+@Data
+@ApiModel(value = "LoginInputModel", description="Login input model")
 public class LoginInputModel {
 
-    @ApiModelProperty(value = "User Name", example = "admin")
-    private String  username;
+    @ApiModelProperty(value = "User Name", example = "demo")
+    private String  userId;
 
-    @ApiModelProperty(value = "Password", example = "password")
+    @ApiModelProperty(value = "Password", example = "demo")
     private String  password;
 
-    public String getUsername() {return username;}
-    public void setUsername(String username) {this.username = username;}
-
-    public String getPassword() {return password;}
-    public void setPassword(String password) {this.password = password;}
-
-	
 }
 
