@@ -6,9 +6,9 @@
         "dynamic"   :"strict",        
         "properties":{
             "productId"    : { "type": "text" },            
-            "productName"  : { "type": "text" },            
-            "listPrice"    : { "type": "long"   },            
-            "reorderLevel" : { "type": "long"   },            
+            "productName"  : { "type": "text" },
+            "productType"  : { "type": "text" },
+            "listPrice"    : { "type": "long" },            
             "unit"         : { "type": "text" }
         }
       }

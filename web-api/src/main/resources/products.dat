@@ -1,8 +1,16 @@
 { "create" : {"_id": "1"} }
-{ "productId": "P1", "productName":"ProdName1", "listPrice": 10, "reorderLevel": 5, "unit":"peice" }
+{ "productId": "P1", "productName":"ProdName1", "productType":"camera", "listPrice": 10,  "unit":"peice" }
 { "create" : {"_id": "2"} }
-{ "productId": "P2", "productName":"ProdName2", "listPrice": 20, "reorderLevel": 2, "unit":"peice" }
+{ "productId": "P2", "productName":"ProdName2", "productType":"camera", "listPrice": 20, "unit":"peice" }
 { "create" : {"_id": "3"} }
-{ "productId": "P3", "productName":"ProdName3", "listPrice": 30, "reorderLevel": 7, "unit":"peice" }
+{ "productId": "P3", "productName":"ProdName2", "productType":"tablet", "listPrice": 20, "unit":"peice" }
 { "create" : {"_id": "4"} }
-{ "productId": "P4", "productName":"ProdName4", "listPrice": 10, "reorderLevel": 6, "unit":"peice" }
+{ "productId": "P4", "productName":"ProdName2", "productType":"laptop", "listPrice": 20, "unit":"peice" }
+{ "create" : {"_id": "5"} }
+{ "productId": "P5", "productName":"Samsung Galaxy", "productType":"phone", "listPrice": 20, "unit":"peice" }
+{ "create" : {"_id": "6"} }
+{ "productId": "P6", "productName":"iPhone X", "productType":"phone", "listPrice": 20, "unit":"peice" }
+{ "create" : {"_id": "7"} }
+{ "productId": "P7", "productName":"SanDisk Extreem", "productType":"sd-card", "listPrice": 30,  "unit":"GB" }
+{ "create" : {"_id": "8"} }
+{ "productId": "P8", "productName":"Lexar Professional", "productType":"sd-card", "listPrice": 10, "unit":"GB" }

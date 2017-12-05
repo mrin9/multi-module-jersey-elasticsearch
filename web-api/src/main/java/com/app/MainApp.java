@@ -10,7 +10,6 @@ import com.app.FolderMonitorService;
 import com.app.config.ElasticClient;
 import com.app.config.InitData;
 import lombok.extern.log4j.Log4j2;
-import org.elasticsearch.client.RestClient;
 
 
 //@ApplicationPath("api") // (Dont work in a .jar may work in .war )
@@ -20,6 +19,7 @@ public class MainApp extends ResourceConfig {
    
    public MainApp(@Context ServletContext servletContext) throws Exception {
         log.info("*** Jersey Init ***");
+       
         
         // Register Features
         register(JacksonFeature.class );
