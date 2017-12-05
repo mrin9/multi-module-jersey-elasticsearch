@@ -1,9 +1,12 @@
 package com.app.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.security.Principal;
 import lombok.*;
 
 @Data
-public class User {
+public class User implements Serializable, Principal {
     private String userId;
     private String password = "";
     private String userName;
@@ -27,5 +30,9 @@ public class User {
         this.setUserName(userName);
         this.setActive(isActive);
     }
+
+    @Override
+    @JsonIgnore // This getter is duplicate of getId but is must for all classes that implements java.security.Principal
+    public String getName() {return this.userName;}
     
 }
