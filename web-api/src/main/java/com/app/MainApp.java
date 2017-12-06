@@ -9,7 +9,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import com.app.FolderMonitorService;
 import com.app.config.ElasticClient;
 import com.app.config.FillData;
-import com.app.service.DataGen;
+import com.app.DataGen;
 import lombok.extern.log4j.Log4j2;
 
 
@@ -39,15 +39,15 @@ public class MainApp extends ResourceConfig {
         log.info("catalina.home :" + System.getProperty("catalina.home"));
         log.info("catalina.base :" + System.getProperty("catalina.base") +"\n\n");
         
-        //log.info("\n *** Creating elasticsearch Data Files for bulk command *** \n");
-        //DataGen.allData("");
+        log.info("\n *** Creating elasticsearch Data Files for bulk command *** \n");
+        DataGen.elasticSearch("");
 
         //log.info("\n *** Folder Watch Init *** \n");
         //FolderMonitorService.start("", 30000);
         
-        log.info("\n *** Connect To ElasticSearch *** \n");
-        ElasticClient.init();  // TODO: ensure its called only once
-        FillData.fromFile();
+        //log.info("\n *** Connect To ElasticSearch *** \n");
+        //ElasticClient.init();  // TODO: ensure its called only once
+        //FillData.fromFile();
         
     }
    

@@ -1,6 +1,9 @@
-package com.app.service;
-
-import com.app.config.FillData;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.app;
 import com.github.javafaker.Faker;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,13 +17,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 @Log4j2
 public class DataGen {
@@ -32,17 +38,18 @@ public class DataGen {
     private static List<String[]> userList;
     private static int totalUsersToGenerate = 10;
     private static int maxOrdersPerUser = 5;
+
     
-    
-    public static void allData(String folderPath){
+    public static void elasticSearch(String folderPath){
         try {
+            log.info("Inside elasticSearch");
             if (StringUtils.isBlank(folderPath)){
                 folderPath = System.getProperty("user.home") + File.separator +"work"+ File.separator +"files";
             }
             readProdMaster();
-            usersData(folderPath );
+            //usersData(folderPath );
             productsData(folderPath);
-            ordersData(folderPath);
+            //ordersData(folderPath);
         } 
         catch (IOException ex) {
             Logger.getLogger(DataGen.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,7 +57,10 @@ public class DataGen {
     }
     
     public static void readProdMaster() throws IOException{
-        String prodMasterUrl = FillData.class.getClassLoader().getResource("product_master.csv").getFile();
+        log.info("Inside readProdMaster");
+        String prodMasterUrl = DataGen.class.getClassLoader().getResource("product_master.csv").getFile();
+        log.info("File Path of Product Master: " + prodMasterUrl);        
+        
         String line = "";
         String splitChar = "\\s*,\\s*"; // comma with leading and trailing spaces
         List<String> tmpProd;
@@ -74,30 +84,50 @@ public class DataGen {
     }
     
     public static void productsData(String folderPath) throws IOException{
+        log.info("Started Product File Creation");
 
-        String productFilePath = folderPath + File.separator + productFileName;
-        Path file = Paths.get(productFilePath) ;
         Faker faker = new Faker(new Locale("en-US"));
+        String generatedProductFilePath = folderPath + File.separator + productFileName;
+        log.info("File Path of Generated File: " + generatedProductFilePath);
+        
+        Path file = Paths.get(generatedProductFilePath) ;
+        String prodInsertTmplUri = DataGen.class.getClassLoader().getResource("elastic_product_insert_template.txt").getFile();
+        log.info("File Path of elastic_product_insert_template.txt: " + prodInsertTmplUri);
+        String line ="";
+        String prodInsertTemplate =""; 
+        
+        /*
+        try (BufferedReader br = new BufferedReader(new FileReader(prodInsertTmplUri))) {
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("#")){continue;}
+                prodInsertTemplate = prodInsertTemplate + line;
+            }
+        }
+        */
+        
+        prodInsertTemplate = new String(Files.readAllBytes(Paths.get(prodInsertTmplUri)));
+        log.info("Template String: " + prodInsertTemplate);
+
         
         //Use try-with-resource to get auto-closeable writer instance
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)){
             for (String[] tmpProd : prodList) {
-                writer.write(String.format("{\"create\": {\"_id\":\"%s\"}}",tmpProd[3]));
-                writer.newLine();
-                writer.write(String.format("{\"productId\":\"%s\""
-                    + ", \"productName\":\"%s\""
-                    + ", \"productType\":\"%s\""
-                    + ", \"unit\":\"%s\""
-                    + ", \"listPrice\":%s"
-                    + ", \"quantityOnHand\":%s"
-                    + ", \"reorderLevel\":%s}"
-                    ,tmpProd[0],tmpProd[1],tmpProd[2],tmpProd[3],tmpProd[4]
-                    ,faker.number().numberBetween(8, 30) 
-                    ,faker.number().numberBetween(5, 20))
-                );
+
+                Map<String,String> prod = new HashMap<String, String>(){{
+                    put("productId", tmpProd[0]);
+                    put("productName", tmpProd[1]);
+                    put("productType", tmpProd[2]);
+                    put("unit", tmpProd[3]);
+                    put("listPrice", tmpProd[4]);
+                    put("quantityOnHand", Integer.toString(faker.number().numberBetween(8, 30)) );
+                    put("reorderLevel",   Integer.toString(faker.number().numberBetween(5, 20)) );
+                }};
+                StrSubstitutor sub = new StrSubstitutor(prod);
+                writer.write(sub.replace(prodInsertTemplate));
                 writer.newLine();
             }
         }
+        log.info("Product File Created");
     }
     
     public static void usersData(String folderPath) throws IOException{
@@ -175,37 +205,6 @@ public class DataGen {
         Path file = Paths.get(productFilePath) ;
         Faker faker = new Faker(new Locale("en-US"));
         Random rand = new Random();
-        /*
-        
-        {
-          "orderId"    :{"type": "text" },
-          "userId"     :{"type": "text" },
-          "userName"   :{"type": "text" },
-          "userEmail"  :{"type": "text" },
-          "orderStatus":{"type": "date" },
-          "paymentType":{"type": "date" },
-          "orderDate"  :{"type": "date" },
-          "shippedDate":{"type": "date" },
-          "Address1"   :{"type": "text" },
-          "address2"   :{"type": "text" },
-          "postal"     :{"type": "text" },
-          "city"       :{"type": "text" },
-          "country"    :{"type": "text" },
-          "orderLines" :{    
-            "type"       : "nested",  
-            "properties" : {
-                "productId"  : { "type": "text"   },            
-                "productName": { "type": "text"   }, 
-                "productType": { "type": "text"   },
-                "quantity"   : { "type": "integer"},            
-                "price"      : { "type": "long"   }            
-            }
-          }  
-        }
-        
-        
-        */
-        
         
         String orderSchemaJson = "{"
             + "\"orderId\":\"%s\""
@@ -292,5 +291,7 @@ public class DataGen {
             }
         }
     }
+    
+    
     
 }
