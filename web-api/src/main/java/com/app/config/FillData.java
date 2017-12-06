@@ -19,11 +19,11 @@ import org.elasticsearch.action.bulk.BulkRequest;
 
 
 @Log4j2
-public class InitData {
+public class FillData {
     public static void createIndex() {
         try {
             
-            String schemaJsonUrl = InitData.class.getClassLoader().getResource("schema.json").getFile();
+            String schemaJsonUrl = FillData.class.getClassLoader().getResource("schema.json").getFile();
             String dataJsonUrl;
             Path   dataJsonPath;
             
@@ -88,7 +88,7 @@ public class InitData {
             /* ************  INDEX CREATION *********** */
             
             // Insert Data into Users index
-            dataJsonUrl  = InitData.class.getClassLoader().getResource("users.dat").getFile();
+            dataJsonUrl  = FillData.class.getClassLoader().getResource("users.dat").getFile();
             dataJsonPath  = Paths.get(dataJsonUrl);
             submitStr = new String(Files.readAllBytes(dataJsonPath));
             submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
@@ -96,7 +96,7 @@ public class InitData {
             log.info("Response Code For Users Insert: " + elSearchResp.getStatusLine().getStatusCode() );
 
             // Insert Data into Products index
-            dataJsonUrl  = InitData.class.getClassLoader().getResource("products.dat").getFile();
+            dataJsonUrl  = FillData.class.getClassLoader().getResource("products.dat").getFile();
             dataJsonPath  = Paths.get(dataJsonUrl);
             submitStr = new String(Files.readAllBytes(dataJsonPath));
             submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
@@ -104,7 +104,7 @@ public class InitData {
             log.info("Response Code For Product Insert: " + elSearchResp.getStatusLine().getStatusCode() );
 
             // Insert Data into Orders index
-            dataJsonUrl  = InitData.class.getClassLoader().getResource("orders.dat").getFile();
+            dataJsonUrl  = FillData.class.getClassLoader().getResource("orders.dat").getFile();
             dataJsonPath  = Paths.get(dataJsonUrl);
             submitStr = new String(Files.readAllBytes(dataJsonPath));
             submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);

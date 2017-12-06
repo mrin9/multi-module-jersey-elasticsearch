@@ -1,16 +1,40 @@
-{ "create" : {"_id": "1"} }
-{ "productId": "P1", "productName":"ProdName1", "productType":"camera", "listPrice": 10,  "unit":"peice" }
-{ "create" : {"_id": "2"} }
-{ "productId": "P2", "productName":"ProdName2", "productType":"camera", "listPrice": 20, "unit":"peice" }
-{ "create" : {"_id": "3"} }
-{ "productId": "P3", "productName":"ProdName2", "productType":"tablet", "listPrice": 20, "unit":"peice" }
-{ "create" : {"_id": "4"} }
-{ "productId": "P4", "productName":"ProdName2", "productType":"laptop", "listPrice": 20, "unit":"peice" }
-{ "create" : {"_id": "5"} }
-{ "productId": "P5", "productName":"Samsung Galaxy", "productType":"phone", "listPrice": 20, "unit":"peice" }
-{ "create" : {"_id": "6"} }
-{ "productId": "P6", "productName":"iPhone X", "productType":"phone", "listPrice": 20, "unit":"peice" }
-{ "create" : {"_id": "7"} }
-{ "productId": "P7", "productName":"SanDisk Extreem", "productType":"sd-card", "listPrice": 30,  "unit":"GB" }
-{ "create" : {"_id": "8"} }
-{ "productId": "P8", "productName":"Lexar Professional", "productType":"sd-card", "listPrice": 10, "unit":"GB" }
+{"create": {"_id":"1"}}
+{"productId":"P1", "productName":"Nikon D810", "productType":"Camera", "unit":"Camera", "listPrice":1157, "quantityOnHand":26, "reorderLevel":12}
+{"create": {"_id":"2"}}
+{"productId":"P2", "productName":"Canon Mark IV", "productType":"Camera", "unit":"Camera", "listPrice":2923, "quantityOnHand":24, "reorderLevel":12}
+{"create": {"_id":"3"}}
+{"productId":"P3", "productName":"Nikon D500", "productType":"Camera", "unit":"Camera", "listPrice":2983, "quantityOnHand":22, "reorderLevel":8}
+{"create": {"_id":"4"}}
+{"productId":"P4", "productName":"Pentax K-1", "productType":"Camera", "unit":"Camera", "listPrice":2059, "quantityOnHand":17, "reorderLevel":8}
+{"create": {"_id":"5"}}
+{"productId":"P5", "productName":"Nexus 6", "productType":"Phone", "unit":"Phone", "listPrice":700, "quantityOnHand":18, "reorderLevel":7}
+{"create": {"_id":"6"}}
+{"productId":"P6", "productName":"Moto Z", "productType":"Phone", "unit":"Phone", "listPrice":1017, "quantityOnHand":14, "reorderLevel":6}
+{"create": {"_id":"7"}}
+{"productId":"P7", "productName":"iPhone 8", "productType":"Phone", "unit":"Phone", "listPrice":787, "quantityOnHand":23, "reorderLevel":10}
+{"create": {"_id":"8"}}
+{"productId":"P8", "productName":"Google Pixel", "productType":"Phone", "unit":"Phone", "listPrice":1305, "quantityOnHand":16, "reorderLevel":7}
+{"create": {"_id":"9"}}
+{"productId":"P9", "productName":"Galaxy S7", "productType":"Phone", "unit":"Phone", "listPrice":2918, "quantityOnHand":10, "reorderLevel":15}
+{"create": {"_id":"10"}}
+{"productId":"P10", "productName":"HTC 10", "productType":"Tablet", "unit":"Tablet", "listPrice":797, "quantityOnHand":25, "reorderLevel":17}
+{"create": {"_id":"11"}}
+{"productId":"P11", "productName":"Note", "productType":"Tablet", "unit":"Tablet", "listPrice":1906, "quantityOnHand":13, "reorderLevel":11}
+{"create": {"_id":"12"}}
+{"productId":"P12", "productName":"iPad Air", "productType":"Tablet", "unit":"Tablet", "listPrice":1011, "quantityOnHand":11, "reorderLevel":6}
+{"create": {"_id":"13"}}
+{"productId":"P13", "productName":"Fire HD", "productType":"Tablet", "unit":"Tablet", "listPrice":1831, "quantityOnHand":25, "reorderLevel":11}
+{"create": {"_id":"14"}}
+{"productId":"P14", "productName":"Acer Aspire", "productType":"Laptop", "unit":"Laptop", "listPrice":2864, "quantityOnHand":12, "reorderLevel":16}
+{"create": {"_id":"15"}}
+{"productId":"P15", "productName":"ThinkPad T365", "productType":"Laptop", "unit":"Laptop", "listPrice":2622, "quantityOnHand":11, "reorderLevel":11}
+{"create": {"_id":"16"}}
+{"productId":"P16", "productName":"Chromebook", "productType":"Laptop", "unit":"Laptop", "listPrice":2837, "quantityOnHand":19, "reorderLevel":12}
+{"create": {"_id":"17"}}
+{"productId":"P17", "productName":"MacBook 13.3", "productType":"Laptop", "unit":"Laptop", "listPrice":1844, "quantityOnHand":13, "reorderLevel":7}
+{"create": {"_id":"18"}}
+{"productId":"P18", "productName":"Asus Zenbook", "productType":"Laptop", "unit":"Laptop", "listPrice":2208, "quantityOnHand":22, "reorderLevel":16}
+{"create": {"_id":"19"}}
+{"productId":"P19", "productName":"Surface Book", "productType":"Laptop", "unit":"Laptop", "listPrice":2128, "quantityOnHand":21, "reorderLevel":15}
+{"create": {"_id":"20"}}
+{"productId":"P20", "productName":"Dell XPS 13", "productType":"Laptop", "unit":"Laptop", "listPrice":2677, "quantityOnHand":17, "reorderLevel":11}
