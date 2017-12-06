@@ -262,7 +262,7 @@ public class DataGen {
                         randomPrice = 100 + (rand.nextInt(80)*10);
                         randomQuantity = 1 + rand.nextInt(2);
                         tmpProd = prodList.get(randomProductIndex);
-                        orderLinesData = orderLinesData + ","+ String.format(tmpProd[0],tmpProd[1], tmpProd[2], tmpProd[4], (1+rand.nextInt(3)) );
+                        orderLinesData = orderLinesData + ","+ String.format(orderLinesSchemaJson,tmpProd[0],tmpProd[1], tmpProd[2], tmpProd[4], (1+rand.nextInt(3)) );
                     }
                     orderLinesData = orderLinesData.replaceFirst(",","");
 
