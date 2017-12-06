@@ -97,7 +97,6 @@ public class FillData {
             elSearchResp = ElasticClient.rest.performRequest("POST", "/products/products/_bulk", urlParams, submitJsonEntity);
             log.info("HTTP Response Code For Product Insert: " + elSearchResp.getStatusLine().getStatusCode() );
 
-            /*
             // Insert Data into Orders index
             dataJsonUrl  = FillData.class.getClassLoader().getResource("orders.dat").getFile();
             dataJsonPath  = Paths.get(dataJsonUrl);
@@ -105,7 +104,7 @@ public class FillData {
             submitJsonEntity = new NStringEntity(submitStr, ContentType.APPLICATION_JSON);
             elSearchResp = ElasticClient.rest.performRequest("POST", "/orders/orders/_bulk", urlParams, submitJsonEntity);
             log.info("Response Code For Orders Insert: " + elSearchResp.getStatusLine().getStatusCode() );
-            */
+        
         }
         catch (IOException ex) {
             log.error("ERROR: >>> In Exception : " + ex.getMessage());

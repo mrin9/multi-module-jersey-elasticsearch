@@ -257,6 +257,7 @@ public class DataGen {
                     orderId++;
                     //Order Lines
                     orderLineCount = rand.nextInt(6)+1;
+                    orderLinesData="";
                     for (i=0; i<orderLineCount;i++){
                         randomProductIndex =  rand.nextInt(prodList.size());
                         randomPrice = 100 + (rand.nextInt(80)*10);
