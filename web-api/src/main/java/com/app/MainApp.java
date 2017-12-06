@@ -47,7 +47,7 @@ public class MainApp extends ResourceConfig {
         
         //log.info("\n *** Connect To ElasticSearch *** \n");
         //ElasticClient.init();  // TODO: ensure its called only once
-        //InitData.createIndex();
+        //FillData.fromFile();
         
     }
    

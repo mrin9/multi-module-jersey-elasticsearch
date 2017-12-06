@@ -59,12 +59,14 @@
           "address2"   :{"type": "text" },
           "postal"     :{"type": "text" },
           "city"       :{"type": "text" },
+          "state"      :{"type": "text" },
           "country"    :{"type": "text" },
           "orderLines" :{    
             "type"       : "nested",  
             "properties" : {
                 "productId"  : { "type": "text"   },            
-                "productName": { "type": "text"   },            
+                "productName": { "type": "text"   }, 
+                "productType": { "type": "text"   },
                 "quantity"   : { "type": "integer"},            
                 "price"      : { "type": "long"   }            
             }
