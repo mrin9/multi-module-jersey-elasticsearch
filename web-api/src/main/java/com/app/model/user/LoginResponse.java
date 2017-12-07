@@ -1,5 +1,6 @@
-package com.app.model.login;
+package com.app.model.user;
 
+import com.app.model.user.LoginOutputModel;
 import com.app.model.response.BaseResponse;
 import io.swagger.annotations.ApiModel;
 

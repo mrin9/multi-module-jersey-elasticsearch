@@ -236,15 +236,19 @@ public class DataGenerator {
         log.info("Orders File Created");
     }
     
-    private static String getFileContent(String fileName) throws IOException{
-        
-        InputStream is = DataGenerator.class.getClassLoader().getResourceAsStream("/"+fileName);
-        String content="", line="";
-        
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("#")) { continue; }
-                content = content + line + "\n";
+    public static String getFileContent(String fileName) throws IOException{
+        String content="";
+        if (fileName != null){
+            fileName =  (fileName.startsWith("/") || fileName.startsWith("\\") )?"/" + fileName.substring(1) : "/"+ fileName;
+            try (InputStream is = DataGenerator.class.getClassLoader().getResourceAsStream("/"+fileName)){
+                String line="";
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                    while ((line = br.readLine()) != null) {
+                        if (line.startsWith("#")) { continue; }
+                        content = content + line + "\n";
+                    }
+                }
+                is.close();
             }
         }
         return content;

@@ -38,10 +38,10 @@ public class MainApp extends ResourceConfig {
         log.info("catalina.home :" + System.getProperty("catalina.home"));
         log.info("catalina.base :" + System.getProperty("catalina.base") +"\n\n");
         
-        //log.info("\n *** Creating elasticsearch Data Files for bulk command *** \n");
+        //log.info("\n Creating elasticsearch Data Files for bulk command... \n");
         //DataGenerator.generateElasticData("");
 
-        log.info("\n *** Connect To ElasticSearch *** \n");
+        log.info("\n Connecting To ElasticSearch... \n");
         ElasticClient.init();  // TODO: ensure its called only once
         FillData.fromFile();
         

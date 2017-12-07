@@ -1,40 +1,28 @@
 package com.app.api;
 
-import com.app.api.BaseController;
-import com.app.config.ElasticClient;
-import com.app.model.response.BaseResponse;
-import com.app.model.login.LoginInputModel;
-import com.app.model.login.LoginOutputModel;
-import com.app.model.login.LoginResponse;
-import com.app.model.user.User;
-import com.app.service.TokenService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import javax.ws.rs.Consumes;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.io.File;
+import java.util.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.GET;
-import lombok.extern.log4j.Log4j2;
+
+import com.fasterxml.jackson.databind.*;
 import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
+import lombok.extern.log4j.Log4j2;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+import com.app.api.BaseController;
+import com.app.config.ElasticClient;
+import com.app.model.user.*;
+import com.app.model.response.BaseResponse;
+import com.app.service.TokenService;
 
 @Log4j2
 @Path ("")
 @Api(value = "Login and User")
-public class UserController {
+public class UserController extends BaseController{
     
     private org.elasticsearch.client.Response elSearchResp;
     private Map<String, String> urlParams;
