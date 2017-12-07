@@ -1,0 +1,1 @@
+{"productId":"${productId}", "productName":"${productName}", "productType":"${productType}", "price":"${price}","quantity":"${quantity}"}

@@ -1,2 +1,0 @@
-{"create": {"_id":"${productId}"}}
-{"productId":"${productId}", "productNameproductNamename}", "productType":"${productType}", "unit":"${unit}", "listPricelistPricename}", "quantityOnHand":"${quantityOnHand}", "reorderLevel":"${reorderLevel}"}

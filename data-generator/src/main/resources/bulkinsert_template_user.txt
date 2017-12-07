@@ -1,0 +1,2 @@
+{"create": {"_id":"${userId}"}}
+{"userId":"${userId}", "password":"${password}", "userName":"${userName}", "email":"${email}", "role":"${role}", "isActive":${isActive}, "address1":"${address1}", "address2":"${address2}", "postal":"${postal}", "city":"${city}", "state":"${state}", "country":"${country}" }

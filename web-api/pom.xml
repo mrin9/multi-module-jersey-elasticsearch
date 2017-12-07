@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mrin</groupId>
-        <artifactId>app-root</artifactId>
+        <artifactId>order-processing-jersey-elastic</artifactId>
         <version>1.0.0</version>
     </parent>
     <groupId>com.mrin</groupId>
@@ -61,7 +61,7 @@
         <!-- Jars build from other projects within this module -->
         <dependency>
             <groupId>com.mrin</groupId>
-            <artifactId>search-engine</artifactId>
+            <artifactId>data-generator</artifactId>
             <version>1.0.0</version>
         </dependency>
         
@@ -182,30 +182,6 @@
                 </configuration>
             </plugin>
             
-            
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-resources-plugin</artifactId>
-               <version>3.0.2</version>
-               <executions>
-                   <execution>
-                       <id>copy-folder</id>
-                       <phase>package</phase>
-                       <goals>
-                           <goal>copy-resources</goal>
-                       </goals>
-                       <configuration>
-                           <outputDirectory>${project.parent.basedir}</outputDirectory>
-                           <includeEmptyDirs>true</includeEmptyDirs>
-                           <resources>
-                               <resource>
-                                    <directory>${project.basedir}/src/main/folders-to-create-for-app</directory>
-                               </resource>
-                           </resources>
-                       </configuration>
-                </execution>
-               </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

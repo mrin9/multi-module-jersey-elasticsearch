@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mrin</groupId>
-    <artifactId>app-root</artifactId>
+    <artifactId>order-processing-jersey-elastic</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     
     <!-- Build order of these modules is evaluated based of dependency graph -->
     <modules> 
-        <module>search-engine</module>
+        <module>data-generator</module>
         <module>web-api</module>
     </modules>
     
