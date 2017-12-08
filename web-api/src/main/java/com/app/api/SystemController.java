@@ -11,9 +11,12 @@ import com.app.model.product.ProductResponse;
 import com.app.model.response.BaseResponse;
 import com.app.model.user.Role;
 import com.app.model.user.User;
+import com.app.service.DataService;
+import static com.app.service.DataService.indexNamesArray;
+import static com.app.service.DataService.insertDataFromFile;
 import com.app.service.ElasticClient;
-import java.util.Collections;
-import java.util.Map;
+import com.app.service.Util;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -33,30 +36,26 @@ public class SystemController  extends BaseController {
     @RolesAllowed({"ADMIN"})
     @ApiOperation(value = "Reset data to original state (all the modification done will be lost)", response = BaseResponse.class)
     public Response resetData (@ApiParam(example="all", allowableValues="users,products,orders,all")   @PathParam("index") String index) throws Exception {
+
         User userFromToken = (User)sc.getUserPrincipal();
-        org.elasticsearch.client.Response elSearchResp;
-        String responseBody="";
-        Map<String, String> urlParams = Collections.emptyMap();
-        HttpEntity submitJsonEntity;
-        String submitData = "{" +
-            "  \"query\": {" +
-            "    \"match_all\": {}" +
-            "  }" +
-            "}";
-        submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        if (index.equalsIgnoreCase("all")){
-             elSearchResp = ElasticClient.rest.performRequest("POST", "/orders/orders/_delete_by_query", urlParams, submitJsonEntity);
-             elSearchResp = ElasticClient.rest.performRequest("POST", "/products/products/_delete_by_query", urlParams, submitJsonEntity);
-             elSearchResp = ElasticClient.rest.performRequest("POST", "/users/users/_delete_by_query", urlParams, submitJsonEntity);
-        }
-        else if(index.equalsIgnoreCase("users") || index.equalsIgnoreCase("products") || index.equalsIgnoreCase("orders")){
-             elSearchResp = ElasticClient.rest.performRequest("POST", "/"+index+"/"+index+"/_delete_by_query", urlParams, submitJsonEntity);
-        }
         BaseResponse resp = new BaseResponse();
+        // catch exceptions of org.elasticsearch.client.ResponseException type
+        
+        if (index.equalsIgnoreCase("all")){
+            List<String> indexNameList = Arrays.asList(indexNamesArray);
+            for (String tmpIndex : indexNameList) {
+                DataService.deleteData(tmpIndex);
+            }
+        }
+        else if (Util.isValidIndex(index)){
+            DataService.deleteData(index);
+        }
+        
         resp.setSuccesMessage("Documents deleted ");
         return Response.ok(resp).build();
     }
-
+    
+    
     
     @POST 
     @Path("/system/elastic/_execute")

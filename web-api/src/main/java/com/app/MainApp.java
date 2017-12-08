@@ -7,7 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import com.app.filter.CORSResponseFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import com.app.service.ElasticClient;
-import com.app.service.FillData;
+import com.app.service.DataService;
 import com.app.DataGenerator;
 import lombok.extern.log4j.Log4j2;
 
@@ -43,7 +43,8 @@ public class MainApp extends ResourceConfig {
 
         log.info("\n Connecting To ElasticSearch... \n");
         ElasticClient.init();  // TODO: ensure its called only once
-        FillData.fromFile();
+        //DataService.resetDataFromFile();
+        DataService.resetAllData();
         
     }
    

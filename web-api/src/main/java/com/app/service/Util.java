@@ -1,6 +1,9 @@
 package com.app.service;
 
+import static com.app.service.DataService.indexNamesArray;
 import java.io.*;
+import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
 
 public class Util {
  
@@ -20,6 +23,15 @@ public class Util {
             }
         }
         return content;
+    }
+    
+    public static boolean isValidIndex(String indexName){
+        if (StringUtils.isNotBlank(indexName)){
+            if(Arrays.asList(DataService.indexNamesArray).contains(indexName)){
+                return true;
+            }
+        }
+        return false;
     }
     
 }
