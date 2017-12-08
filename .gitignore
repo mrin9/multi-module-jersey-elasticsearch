@@ -1,8 +1,9 @@
 **/.DS_Store
 **/target
-.classpath
-.project
-nbactions.xml
-nb-configuration.xml
+**/.classpath
+**/.project
+**/.settings
+**/nbactions.xml
+**/nb-configuration.xml
 apache-tomcat*
 **/apache-tomcat*/
