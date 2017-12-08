@@ -1,5 +1,6 @@
-package com.app.config;
+package com.app.service;
 
+import com.app.service.ElasticClient;
 import com.app.service.Util;
 import java.io.*;
 import java.util.*;
@@ -18,10 +19,6 @@ public class FillData {
     public static void fromFile() {
         try {
             
-            String schemaJsonUrl = FillData.class.getClassLoader().getResource("schema.json").getFile();
-            String dataJsonUrl;
-            Path   dataJsonPath;
-            
             String submitStr="";
             Response elSearchResp;
             Map<String, String> urlParams = Collections.emptyMap();
@@ -31,8 +28,7 @@ public class FillData {
             elSearchResp = ElasticClient.rest.performRequest("DELETE", "/*");
             
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File(schemaJsonUrl));
-
+            JsonNode rootNode = objectMapper.readTree(Util.getFileContent("schema.json"));
             /* ************  INDEX CREATION *********** */
             
             // Create users_index

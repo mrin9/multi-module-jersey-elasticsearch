@@ -14,7 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import com.app.api.BaseController;
-import com.app.config.ElasticClient;
+import com.app.service.ElasticClient;
 import com.app.model.user.*;
 import com.app.model.response.BaseResponse;
 import com.app.service.TokenService;

@@ -6,8 +6,8 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import com.app.filter.CORSResponseFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import com.app.config.ElasticClient;
-import com.app.config.FillData;
+import com.app.service.ElasticClient;
+import com.app.service.FillData;
 import com.app.DataGenerator;
 import lombok.extern.log4j.Log4j2;
 

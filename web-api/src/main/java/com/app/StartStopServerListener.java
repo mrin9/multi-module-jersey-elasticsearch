@@ -1,7 +1,7 @@
 package com.app;
 
 
-import com.app.config.ElasticClient;
+import com.app.service.ElasticClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
