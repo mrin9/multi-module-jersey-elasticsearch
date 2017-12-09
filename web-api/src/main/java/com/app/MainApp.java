@@ -10,6 +10,7 @@ import com.app.service.ElasticClient;
 import com.app.service.DataService;
 import com.app.DataGenerator;
 import lombok.extern.log4j.Log4j2;
+import org.elasticsearch.ElasticsearchException;
 
 
 //@ApplicationPath("api") // (Dont work in a .jar may work in .war )
@@ -42,9 +43,13 @@ public class MainApp extends ResourceConfig {
         //DataGenerator.generateElasticData("");
 
         log.info("\n Connecting To ElasticSearch... \n");
-        ElasticClient.init();  // TODO: ensure its called only once
-        //DataService.resetDataFromFile();
-        DataService.resetAllData();
+        try{
+            ElasticClient.init();  // TODO: ensure its called only once
+            DataService.resetAllData();
+        }
+        catch(java.net.ConnectException|ElasticsearchException e){
+            ElasticClient.parseException(e);
+        }
         
     }
    

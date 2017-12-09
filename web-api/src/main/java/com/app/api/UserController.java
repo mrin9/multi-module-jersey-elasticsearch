@@ -17,6 +17,7 @@ import com.app.api.BaseController;
 import com.app.service.ElasticClient;
 import com.app.model.user.*;
 import com.app.model.response.BaseResponse;
+import com.app.model.response.MultiMessageResponse;
 import com.app.service.TokenService;
 
 @Log4j2
@@ -24,7 +25,7 @@ import com.app.service.TokenService;
 @Api(value = "Login and User")
 public class UserController extends BaseController{
     
-    private org.elasticsearch.client.Response elSearchResp;
+    private org.elasticsearch.client.Response esResp;
     private Map<String, String> urlParams;
     
     @POST	
@@ -46,13 +47,13 @@ public class UserController extends BaseController{
         urlParams.put("filter_path", "hits.hits");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        BaseResponse resp = new BaseResponse();
+        BaseResponse resp = new MultiMessageResponse();
                 
         try {
-            elSearchResp = ElasticClient.rest.performRequest("GET", "/users/users/_search", urlParams);
+            esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search", urlParams);
             
-            if (elSearchResp.getStatusLine().getStatusCode() == 200){
-                String responseBody = EntityUtils.toString(elSearchResp.getEntity());
+            if (esResp.getStatusLine().getStatusCode() == 200){
+                String responseBody = EntityUtils.toString(esResp.getEntity());
                 JsonNode respJsonNode = objectMapper.readTree(responseBody);
                 JsonNode respSourceNode = respJsonNode.path("hits").path("hits");
                 log.info("ES Response: " + responseBody);
@@ -81,8 +82,7 @@ public class UserController extends BaseController{
             }
         }
         catch (IOException | ParseException ex) {
-            log.error("ERROR :" + ex.getMessage());
-            resp.setSuccessMessage("Internal Exception:" + ex.getMessage());
+            resp = ElasticClient.parseException(ex);
             return Response.ok(resp).build();
         }
         return Response.ok(resp).build();

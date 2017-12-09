@@ -92,32 +92,45 @@ public class ElasticClient {
     
     public static MultiMessageResponse parseException(Exception ex) {
         MultiMessageResponse restResp = new MultiMessageResponse();
+        String errMsg ="";
         if (ex instanceof ResponseException){
             Response elResp = ((ResponseException)ex).getResponse();
             return parseResponse(elResp);
         }
         
         if (ex instanceof ElasticsearchStatusException){
-            restResp.setErrorMessage(  " Status Exception:" + ((ElasticsearchStatusException)ex).getMessage());
+            errMsg="Status Exception:" + ((ElasticsearchStatusException)ex).getMessage();
+            log.error(errMsg);
+            restResp.setErrorMessage(errMsg);
             return restResp;
         }
         if (ex instanceof ElasticsearchCorruptionException){
-            restResp.setErrorMessage(  " Curruption Exception:" + ((ElasticsearchCorruptionException)ex).getMessage());
+            errMsg = "Curruption Exception: " + ((ElasticsearchCorruptionException)ex).getMessage();
+            log.error(errMsg);
+            restResp.setErrorMessage(errMsg);
             return restResp;
         }
         if (ex instanceof ElasticsearchParseException){
-            restResp.setErrorMessage(  " Parse Exception:" + ((ElasticsearchParseException)ex).getMessage());
+            errMsg = "Parse Exception: " + ((ElasticsearchParseException)ex).getMessage();
+            log.error(errMsg);
+            restResp.setErrorMessage(errMsg);
             return restResp;
         }
         if (ex instanceof ElasticsearchSecurityException){
-            restResp.setErrorMessage(  " Security Exception:" + ((ElasticsearchSecurityException)ex).getMessage());
+            errMsg = "Security Exception: " + ((ElasticsearchSecurityException)ex).getMessage();
+            log.error(errMsg);
+            restResp.setErrorMessage(errMsg);
             return restResp;
         }
         if (ex instanceof ConnectException){
-            restResp.setNoConnectionMessage("Unable to Connect to Elasticsearch");
+            errMsg = "Connection Exception: Unable to Connect to Elasticsearch" ;
+            log.error(errMsg);
+            restResp.setNoConnectionMessage(errMsg);
             return restResp;
         }
-        restResp.setErrorMessage(ex.getClass().getName() +": " + ex.getMessage());
+        errMsg = ex.getClass().getName() +": " + ex.getMessage();
+        log.error(errMsg);
+        restResp.setErrorMessage(errMsg);
         return restResp;
     }
 
