@@ -7,6 +7,6 @@ import com.app.model.response.*;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class UserResponse extends OperationResponse {
+public class UserResponse extends MultiMessageResponse {
     private User data = new User();
 }

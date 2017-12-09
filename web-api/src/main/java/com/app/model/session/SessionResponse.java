@@ -7,7 +7,7 @@ import com.app.model.response.*;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class SessionResponse extends OperationResponse {
+public class SessionResponse extends MultiMessageResponse {
   @ApiModelProperty(required = true, value = "")
   private SessionItem item;
 }

@@ -9,6 +9,7 @@ import javax.annotation.security.PermitAll;
 import io.swagger.annotations.*;
 import com.app.model.product.ProductResponse;
 import com.app.model.response.BaseResponse;
+import com.app.model.response.MultiMessageResponse;
 import com.app.model.user.Role;
 import com.app.model.user.User;
 import com.app.service.DataService;
@@ -51,11 +52,9 @@ public class SystemController  extends BaseController {
             DataService.deleteData(index);
         }
         
-        resp.setSuccesMessage("Documents deleted ");
+        resp.setSuccessMessage("Documents deleted ");
         return Response.ok(resp).build();
     }
-    
-    
     
     @POST 
     @Path("/system/elastic/_execute")
@@ -81,13 +80,13 @@ public class SystemController  extends BaseController {
             }
             responseBody = EntityUtils.toString(elSearchResp.getEntity());
             BaseResponse resp = new BaseResponse();
-            resp.setSuccesMessage(responseBody);
+            resp.setSuccessMessage(responseBody);
             return Response.ok(resp).build();
         }
         catch (Exception e){
-            log.info(e.getMessage());
-            BaseResponse resp = new BaseResponse();
-            resp.setSuccesMessage(e.getMessage());
+            log.info("Exeception Class:" + e.getClass().getName());
+            log.info("Exeception Message:" + e.getMessage());
+            MultiMessageResponse resp = ElasticClient.parseException(e);
             return Response.ok(resp).build();
         }
     }

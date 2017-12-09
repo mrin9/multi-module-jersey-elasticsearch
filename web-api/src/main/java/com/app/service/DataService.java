@@ -21,11 +21,11 @@ public class DataService {
     public static final String[] indexNamesArray = new String[] {"users","products","orders"};
 
     public static void resetAllData() throws Exception {
-        Response elSearchResp;
+        Response esResp;
         List<String> indexNameList = Arrays.asList(indexNamesArray);
         
         //First Delete all indexes 
-        elSearchResp = DataService.deleteIndex("all");
+        esResp = DataService.deleteIndex("all");
         log.info( "All Index Deleted");
 
         //Create all the indexes
@@ -50,9 +50,9 @@ public class DataService {
         }
         Map<String, String> emptyUrlParams = Collections.emptyMap();
         HttpEntity submitJsonEntity = new NStringEntity(indexSchema, ContentType.APPLICATION_JSON);
-        Response elSearchResp = ElasticClient.rest.performRequest("PUT", "/"+index, emptyUrlParams, submitJsonEntity);
+        Response esResp = ElasticClient.rest.performRequest("PUT", "/"+index, emptyUrlParams, submitJsonEntity);
         log.info( index +" Index Created");
-        return elSearchResp;
+        return esResp;
     }
     
     public static Response deleteIndex(String index) throws Exception {
@@ -72,7 +72,7 @@ public class DataService {
         if (Util.isValidIndex(index) == false ){
            throw new Exception ("Index can be one of [" + String.join(",", indexNamesArray) + "]" ); 
         }
-        Response elSearchResp;
+        Response esResp;
         Map<String, String> emptyUrlParams = Collections.emptyMap();
         String fileName="", postUrl="", submitData = "" ;
 
@@ -82,9 +82,9 @@ public class DataService {
         submitData = Util.getFileContent(fileName);
         
         HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        elSearchResp = ElasticClient.rest.performRequest("POST", postUrl, emptyUrlParams, submitJsonEntity);
-        log.info("HTTP Response ("+ index +" insert): " + elSearchResp.getStatusLine().getStatusCode() );
-        return elSearchResp;
+        esResp = ElasticClient.rest.performRequest("POST", postUrl, emptyUrlParams, submitJsonEntity);
+        log.info("HTTP Response ("+ index +" insert): " + esResp.getStatusLine().getStatusCode() );
+        return esResp;
     }
 
     public static Response deleteData(String index) throws Exception {

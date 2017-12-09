@@ -1,35 +1,35 @@
 package com.app.model.response;
 
 import lombok.*;
-import java.util.*;
-import static com.app.model.response.OperationResponse.*;
 
-//@Data //for getters and setters
-public class PageResponse extends OperationResponse {
-  @Getter @Setter private boolean  first;
-  @Getter @Setter private boolean  last;
-  @Getter @Setter private int currentPageNumber;
-  @Getter @Setter private int itemsInPage;
-  @Getter @Setter private int pageSize;
-  @Getter @Setter private int totalPages;
-  @Getter @Setter private long totalItems;
-  private List items;
+@Data
+public class PageResponse extends BaseResponse {
+    private int totalItems;
+    private int pageSize;
+    private int totalPages;
+    private int currentPageNumber;
+    private int itemsInPage;  // for last page ItemsInPage and PageSize can be different
 
-  public void setPageStats(){
-  }
-
-  public void setPageTotal(int count, boolean setDefaultMessage){
-    //this.items             = list;
-    this.first             = true;
-    this.last              = true;
-    this.itemsInPage       = count;
-    this.totalItems        = count;
-    this.totalPages        = 1;
-    this.pageSize          = count;
-    if (setDefaultMessage == true){
-      this.setOperationStatus(ResponseStatusEnum.SUCCESS);
-      this.setOperationMessage("Total " + count + " items ");
+    public PageResponse() {}
+    
+    public PageResponse(int totalItems, int pageSize) {
+        calculatePageStats(totalItems, pageSize);
+        currentPageNumber = 1;
+        this.setSuccessMessage("Total " + totalItems + " items ");
     }
-  }
 
+    public PageResponse(int totalItems, int pageSize, int currentPageNumber) {
+        calculatePageStats(totalItems, pageSize);
+        this.currentPageNumber = (currentPageNumber > 0 && currentPageNumber <= totalPages)? currentPageNumber : 1;
+        this.setSuccessMessage("Total " + totalItems + " items ");
+    }
+
+    private void calculatePageStats(int totalItems, int pageSize){
+        if (totalItems>0 && pageSize > 0){
+            this.totalItems = totalItems;
+            this.pageSize =  pageSize;
+            this.totalPages = (int)(totalItems/pageSize) + (totalItems%pageSize==0?0:1);
+            this.currentPageNumber = 1;
+        }
+    }
 }

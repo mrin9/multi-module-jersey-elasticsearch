@@ -3,7 +3,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class BaseResponse {
     
-    public enum MessageTypeEnum {SUCCESS, ERROR, WARNING, NO_ACCESS, NOTICE};
+    public enum MessageTypeEnum {SUCCESS, ERROR, WARNING, NO_ACCESS, NO_CONNECTION};
     protected MessageTypeEnum  msgType;
     protected String  msg;
 
@@ -16,8 +16,13 @@ public class BaseResponse {
     public void setMsg(String message) {this.msg = message;}
     
     
-    public void setSuccesMessage(String msg){
+    public void setSuccessMessage(String msg){
         this.msgType = MessageTypeEnum.SUCCESS;
+        this.msg = msg;
+    }
+
+    public void setNoConnectionMessage(String msg){
+        this.msgType = MessageTypeEnum.NO_CONNECTION;
         this.msg = msg;
     }
 
@@ -31,11 +36,6 @@ public class BaseResponse {
         this.msg = msg;
     }
     
-    public void setNoticeMessage(String msg){
-        this.msgType = MessageTypeEnum.NOTICE;
-        this.msg = msg;
-    }
-
     public void setTypeAndMessage(MessageTypeEnum msgType, String msg){
         this.msgType = msgType;
         this.msg = msg;

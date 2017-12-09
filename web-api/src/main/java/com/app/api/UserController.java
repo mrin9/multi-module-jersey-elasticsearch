@@ -82,7 +82,7 @@ public class UserController extends BaseController{
         }
         catch (IOException | ParseException ex) {
             log.error("ERROR :" + ex.getMessage());
-            resp.setSuccesMessage("Internal Exception:" + ex.getMessage());
+            resp.setSuccessMessage("Internal Exception:" + ex.getMessage());
             return Response.ok(resp).build();
         }
         return Response.ok(resp).build();

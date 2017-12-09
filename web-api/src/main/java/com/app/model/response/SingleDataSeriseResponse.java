@@ -9,6 +9,6 @@ import com.app.model.data.*;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class SingleDataSeriseResponse extends OperationResponse {
+public class SingleDataSeriseResponse extends MultiMessageResponse {
     private List<SingleSerise> items;
 }

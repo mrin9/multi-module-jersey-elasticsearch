@@ -1,5 +1,8 @@
 package com.app.service;
 
+import com.app.model.response.MultiMessageResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +16,17 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.rest.RestStatus;
+
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.ElasticsearchParseException;
+import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.ElasticsearchCorruptionException;
+import org.elasticsearch.ElasticsearchSecurityException;
+import java.net.ConnectException;
+
+import org.elasticsearch.client.ResponseException;
+
 
 @Log4j2
 public class ElasticClient {
@@ -36,5 +48,78 @@ public class ElasticClient {
         rest = serverAddress.build();
         simpleRest = new RestHighLevelClient(serverAddress);
     }
+    
+    
+    
+    public static MultiMessageResponse parseResponse(Response esResp) {
+        MultiMessageResponse restResp = new MultiMessageResponse();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String responseBody = EntityUtils.toString(esResp.getEntity());
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+            if (rootNode.has("error")){
+                
+                JsonNode errNode = rootNode.get("error");
+                if (errNode.isObject()){
+                    restResp.setErrorMessage(rootNode.path("status").asText());
+                    restResp.addSubMessage(errNode.get("type").asText("_type"), errNode.get("reason").asText("_reason"));
+                    restResp.addSubMessage(errNode.path("resource.type").asText("_resource.type"), errNode.path("index").asText("_index"));
+                }
+                else if (errNode.isBoolean() && errNode.asBoolean() == true){
+                    restResp.setErrorMessage(rootNode.path("status").asText()); // check bulk responses
+                }
+                else if (errNode.isTextual()){
+                    restResp.setErrorMessage(rootNode.path("error").asText("_errorMessage"));
+                }
+                else{
+                    // Parse Success Response Here
+                    restResp.setSuccessMessage(rootNode.path("status").asText());
+                }
+            }
+            return restResp;
+        } 
+        catch (IOException ex) {
+            log.info("Response Parse IOException");
+            restResp.setErrorMessage("Response Parse IOException");
+            return restResp;
+        } 
+        catch (ParseException ex) {
+            log.info("Jackson JSON Parse Exception");
+            restResp.setErrorMessage("Response Parse IOException");
+            return restResp;
+        }
+    }
+    
+    public static MultiMessageResponse parseException(Exception ex) {
+        MultiMessageResponse restResp = new MultiMessageResponse();
+        if (ex instanceof ResponseException){
+            Response elResp = ((ResponseException)ex).getResponse();
+            return parseResponse(elResp);
+        }
+        
+        if (ex instanceof ElasticsearchStatusException){
+            restResp.setErrorMessage(  " Status Exception:" + ((ElasticsearchStatusException)ex).getMessage());
+            return restResp;
+        }
+        if (ex instanceof ElasticsearchCorruptionException){
+            restResp.setErrorMessage(  " Curruption Exception:" + ((ElasticsearchCorruptionException)ex).getMessage());
+            return restResp;
+        }
+        if (ex instanceof ElasticsearchParseException){
+            restResp.setErrorMessage(  " Parse Exception:" + ((ElasticsearchParseException)ex).getMessage());
+            return restResp;
+        }
+        if (ex instanceof ElasticsearchSecurityException){
+            restResp.setErrorMessage(  " Security Exception:" + ((ElasticsearchSecurityException)ex).getMessage());
+            return restResp;
+        }
+        if (ex instanceof ConnectException){
+            restResp.setNoConnectionMessage("Unable to Connect to Elasticsearch");
+            return restResp;
+        }
+        restResp.setErrorMessage(ex.getClass().getName() +": " + ex.getMessage());
+        return restResp;
+    }
+
     
 }
