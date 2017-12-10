@@ -11,6 +11,7 @@ import com.app.model.product.ProductResponse;
 import com.app.model.response.BaseResponse;
 import com.app.model.user.Role;
 import com.app.model.user.User;
+import com.app.service.ElasticClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
@@ -25,24 +26,32 @@ public class SearchController extends BaseController{
     @Path("/search/{index:users|products|orders}")
     @PermitAll
     //@RolesAllowed({"USER", "ADMIN"})
-    @ApiOperation(value = "Search Products", response = ProductResponse.class)
+    @ApiOperation(value = "Search ", response = ProductResponse.class)
     public Response search( 
-        @ApiParam(example="Phone", allowableValues="users,products,orders")   @PathParam("index") String productType, 
-        @ApiParam(example="0"    , defaultValue="0"  , required=true) @DefaultValue("0")   @QueryParam("start") int start,
-        @ApiParam(example="100"  , defaultValue="100", required=true) @DefaultValue("100") @QueryParam("limit") int limit, 
+        @ApiParam(example="orders", allowableValues="users,products,orders", required=true)  @PathParam("index") String index, 
+        @ApiParam(example="0"    , defaultValue="0"  , required=true) @DefaultValue("0")     @QueryParam("from") int from,
+        @ApiParam(example="100"  , defaultValue="100", required=true) @DefaultValue("100")   @QueryParam("size") int size, 
         @ApiParam(value="sort field, prefix with '-' for descending order", example="-listPrice", defaultValue="-listPrice") @DefaultValue("-listPrice") @QueryParam("sort")  String sort, 
         @QueryParam("filter") String filter
     ) 
     throws Exception {
         User userFromToken = (User)sc.getUserPrincipal();
+        if (from<=0){from=0;}
+        if (size==0 || size >500){size=500;}
+        
         String submitData = "{" 
-           + "  `query`:{" 
+           + "   `from`:%s" 
+           + "  ,`size`:%s" 
+           + "  ,`query`:{" 
+           + "  ,`query`:{" 
            + "    `match_all`:{}" 
            + "  }" 
            + "}".replace('`', '"');
+        
+        org.elasticsearch.client.Response elSearchResp;
+
+        submitData =  String.format(submitData, from,size);
         HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-
-
         BaseResponse resp = new BaseResponse();
         return Response.ok(resp).build();
     }

@@ -17,13 +17,17 @@ import static com.app.service.DataService.indexNamesArray;
 import static com.app.service.DataService.insertDataFromFile;
 import com.app.service.ElasticClient;
 import com.app.service.Util;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Log4j2
 @Path("")
@@ -62,12 +66,11 @@ public class SystemController  extends BaseController {
     @ApiOperation(value = "Execute elastic Query)", response = BaseResponse.class)
     public Response resetData (
         @ApiParam(example="GET", allowableValues="GET,PUT,POST,DELETE") @QueryParam("method") String method,
-        @ApiParam(example="")  @QueryParam("url") String url,
-        @ApiParam(example="")  @QueryParam("data") String data
-    ) throws Exception {
+        @ApiParam(example="/orders/orders/_search")  @QueryParam("url") String url,
+        @ApiParam(example="{\"from\":0 ,\"size\":10, \"query\":{\"match_all\":{}}}")  @QueryParam("data") String data
+    ) throws Exception{
         try {
             org.elasticsearch.client.Response elSearchResp;
-            String responseBody="";
             Map<String, String> urlParams = Collections.emptyMap();
             HttpEntity submitJsonEntity;
 
@@ -78,16 +81,15 @@ public class SystemController  extends BaseController {
                 submitJsonEntity = new NStringEntity(data, ContentType.APPLICATION_JSON);
                 elSearchResp = ElasticClient.rest.performRequest(method, url, urlParams, submitJsonEntity);
             }
-            responseBody = EntityUtils.toString(elSearchResp.getEntity());
-            BaseResponse resp = new BaseResponse();
-            resp.setSuccessMessage(responseBody);
-            return Response.ok(resp).build();
+            ObjectNode esRespNode = ElasticClient.parseResponse(elSearchResp);
+            return Response.ok(esRespNode).build();
         }
-        catch (Exception e){
-            log.info("Exeception Class:" + e.getClass().getName());
-            log.info("Exeception Message:" + e.getMessage());
-            MultiMessageResponse resp = ElasticClient.parseException(e);
-            return Response.ok(resp).build();
+        catch (IOException e){
+            
+            log.info("Exeception:[" + e.getClass().getName()+"] " +  e.getMessage()  );
+            log.info("Stack Trace:[" + ExceptionUtils.getStackTrace(e));
+            ObjectNode esRespNode = ElasticClient.parseException(e);
+            return Response.ok(esRespNode).build();
         }
     }
 

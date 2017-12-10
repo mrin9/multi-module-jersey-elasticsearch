@@ -1,11 +1,13 @@
 package com.app.service;
 
+import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.math.BigDecimal;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.ContentTooLongException;
 import org.apache.http.HttpHost;
@@ -49,89 +51,109 @@ public class ElasticClient {
         simpleRest = new RestHighLevelClient(serverAddress);
     }
     
-    
-    
-    public static MultiMessageResponse parseResponse(Response esResp) {
-        MultiMessageResponse restResp = new MultiMessageResponse();
+    public static ObjectNode parseResponse(Response esResp) {
+        log.info("Inside ParseResponse");
+        ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseBody = EntityUtils.toString(esResp.getEntity());
-            JsonNode rootNode = objectMapper.readTree(responseBody);
-            if (rootNode.has("error")){
-                
-                JsonNode errNode = rootNode.get("error");
+            JsonNode esRespNode = getJsonFromESResponse(esResp);
+            if (esRespNode.has("error")){
+                JsonNode errNode = esRespNode.get("error");
                 if (errNode.isObject()){
-                    restResp.setErrorMessage(rootNode.path("status").asText());
-                    restResp.addSubMessage(errNode.get("type").asText("_type"), errNode.get("reason").asText("_reason"));
-                    restResp.addSubMessage(errNode.path("resource.type").asText("_resource.type"), errNode.path("index").asText("_index"));
+                    respJsonNode.put("msgType", "ERROR");
+                    respJsonNode.put("msg", esRespNode.path("status").asText("_status")); 
+                    respJsonNode.put("esErrType",      errNode.get("type").asText("_type")); 
+                    respJsonNode.put("esErrReason",    errNode.get("reason").asText("_reason"));
+                    respJsonNode.put("esResourceType", esRespNode.path("resource.type").asText("_resource.type"));
+                    respJsonNode.put("esResourceName", esRespNode.path("index").asText("_index"));
+                    respJsonNode.set("esResponse", esRespNode);
                 }
                 else if (errNode.isBoolean() && errNode.asBoolean() == true){
-                    restResp.setErrorMessage(rootNode.path("status").asText()); // check bulk responses
+                    respJsonNode.put("msgType", "ERROR");
+                    respJsonNode.put("msg", esRespNode.path("status").asText("_status")); // check Bulk response
+                }
+                else if (errNode.isBoolean() && errNode.asBoolean() == false){
+                    // Parse Success Response Here
+                    respJsonNode.put("msgType", "SUCCESS");
+                    respJsonNode.put("msg", "Response From Elasticseach");
+                    respJsonNode.set("esResponse", esRespNode);
                 }
                 else if (errNode.isTextual()){
-                    restResp.setErrorMessage(rootNode.path("error").asText("_errorMessage"));
-                }
-                else{
-                    // Parse Success Response Here
-                    restResp.setSuccessMessage(rootNode.path("status").asText());
+                    respJsonNode.put("msgType", "ERROR");
+                    respJsonNode.put("msg", esRespNode.path("error").asText("_error"));
+                    respJsonNode.set("esResponse", esRespNode);
                 }
             }
-            return restResp;
+            else{
+                // Parse Success Response Here
+                respJsonNode.put("msgType", "SUCCESS");
+                respJsonNode.put("msg", "Response From Elasticseach");
+                respJsonNode.set("esResponse", esRespNode);
+            }
+            return respJsonNode;
         } 
-        catch (IOException ex) {
+        catch (IOException e) {
             log.info("Response Parse IOException");
-            restResp.setErrorMessage("Response Parse IOException");
-            return restResp;
+            respJsonNode.put("msgType", "ERROR");
+            respJsonNode.put("msg", "Response IOException");
+            respJsonNode.put("exception", e.getMessage());
+
+            return respJsonNode;
         } 
-        catch (ParseException ex) {
+        catch (ParseException e) {
             log.info("Jackson JSON Parse Exception");
-            restResp.setErrorMessage("Response Parse IOException");
-            return restResp;
+            respJsonNode.put("msgType", "ERROR");
+            respJsonNode.put("msg", "Response JSON Parse Exception");
+            respJsonNode.put("exception", e.getMessage());
+            return respJsonNode;
         }
     }
     
-    public static MultiMessageResponse parseException(Exception ex) {
+    public static ObjectNode parseException(Exception ex) {
         MultiMessageResponse restResp = new MultiMessageResponse();
+        ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
         String errMsg ="";
         if (ex instanceof ResponseException){
             Response elResp = ((ResponseException)ex).getResponse();
             return parseResponse(elResp);
         }
-        
-        if (ex instanceof ElasticsearchStatusException){
-            errMsg="Status Exception:" + ((ElasticsearchStatusException)ex).getMessage();
-            log.error(errMsg);
-            restResp.setErrorMessage(errMsg);
-            return restResp;
-        }
-        if (ex instanceof ElasticsearchCorruptionException){
-            errMsg = "Curruption Exception: " + ((ElasticsearchCorruptionException)ex).getMessage();
-            log.error(errMsg);
-            restResp.setErrorMessage(errMsg);
-            return restResp;
-        }
-        if (ex instanceof ElasticsearchParseException){
-            errMsg = "Parse Exception: " + ((ElasticsearchParseException)ex).getMessage();
-            log.error(errMsg);
-            restResp.setErrorMessage(errMsg);
-            return restResp;
-        }
-        if (ex instanceof ElasticsearchSecurityException){
-            errMsg = "Security Exception: " + ((ElasticsearchSecurityException)ex).getMessage();
-            log.error(errMsg);
-            restResp.setErrorMessage(errMsg);
-            return restResp;
-        }
-        if (ex instanceof ConnectException){
+        else if (ex instanceof ConnectException){
             errMsg = "Connection Exception: Unable to Connect to Elasticsearch" ;
-            log.error(errMsg);
-            restResp.setNoConnectionMessage(errMsg);
-            return restResp;
         }
-        errMsg = ex.getClass().getName() +": " + ex.getMessage();
+        else if (ex instanceof ElasticsearchStatusException){
+            errMsg="Status Exception:" + ((ElasticsearchStatusException)ex).getMessage();
+        }
+        else if (ex instanceof ElasticsearchCorruptionException){
+            errMsg = "Curruption Exception: " + ((ElasticsearchCorruptionException)ex).getMessage();
+        }
+        else if (ex instanceof ElasticsearchParseException){
+            errMsg = "Parse Exception: " + ((ElasticsearchParseException)ex).getMessage();
+        }
+        else if (ex instanceof ElasticsearchSecurityException){
+            errMsg = "Security Exception: " + ((ElasticsearchSecurityException)ex).getMessage();
+        }
+        else{
+            errMsg = ex.getClass().getName() +": " + ex.getMessage();
+        }
         log.error(errMsg);
-        restResp.setErrorMessage(errMsg);
-        return restResp;
+        respJsonNode.put("msgType", "ERROR");
+        respJsonNode.put("msg", errMsg);
+        return respJsonNode;
+
+    }
+
+    public static String getStringFromESResponse(Response esResp) {
+        try {
+            return EntityUtils.toString(esResp.getEntity());
+        }
+        catch (IOException e){
+            log.error("Unable to get Response Body: " + e.getMessage() );
+            return "";
+        }
+    }
+
+    public static JsonNode getJsonFromESResponse(Response esResp) throws IOException, ParseException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(getStringFromESResponse(esResp));
     }
 
     

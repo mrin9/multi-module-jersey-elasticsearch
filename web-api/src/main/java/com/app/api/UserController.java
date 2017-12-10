@@ -19,6 +19,7 @@ import com.app.model.user.*;
 import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
 import com.app.service.TokenService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Log4j2
 @Path ("")
@@ -81,9 +82,9 @@ public class UserController extends BaseController{
                 }
             }
         }
-        catch (IOException | ParseException ex) {
-            resp = ElasticClient.parseException(ex);
-            return Response.ok(resp).build();
+        catch (IOException | ParseException e) {
+            ObjectNode esRespNode = ElasticClient.parseException(e);
+            return Response.ok(esRespNode).build();
         }
         return Response.ok(resp).build();
 
