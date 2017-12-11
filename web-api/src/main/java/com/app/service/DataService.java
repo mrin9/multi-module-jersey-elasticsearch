@@ -1,18 +1,12 @@
 package com.app.service;
 
-import com.app.service.ElasticClient;
-import com.app.service.Util;
-import java.io.*;
 import java.util.*;
-import java.nio.file.*;
 
 import com.fasterxml.jackson.databind.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
-import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
 
 @Log4j2

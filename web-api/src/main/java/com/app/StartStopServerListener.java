@@ -1,10 +1,7 @@
 package com.app;
 
-
 import com.app.service.ElasticClient;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;  
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;

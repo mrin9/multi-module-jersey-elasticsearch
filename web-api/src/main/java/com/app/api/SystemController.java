@@ -1,34 +1,22 @@
 package com.app.api;
 
+import java.io.*;
+import java.util.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.servlet.http.*;
-import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.*;
 
 import io.swagger.annotations.*;
-import com.app.model.product.ProductResponse;
-import com.app.model.response.BaseResponse;
-import com.app.model.response.MultiMessageResponse;
-import com.app.model.response.PageResponse;
-import com.app.model.user.Role;
+import com.app.model.response.*;
 import com.app.model.user.User;
-import com.app.service.DataService;
-import static com.app.service.DataService.indexNamesArray;
-import static com.app.service.DataService.insertDataFromFile;
-import com.app.service.ElasticClient;
-import com.app.service.Util;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.IOException;
-import java.util.*;
+import com.app.service.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.nio.entity.NStringEntity;
-import org.apache.http.util.EntityUtils;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Log4j2
 @Path("")
@@ -80,8 +68,6 @@ public class SystemController  extends BaseController {
         }
     }
     
-    
-    
     @DELETE 
     @Path("/system/data/{index:users|products|orders|all}/_remove_data")
     @RolesAllowed({"ADMIN"})
@@ -93,7 +79,7 @@ public class SystemController  extends BaseController {
         // catch exceptions of org.elasticsearch.client.ResponseException type
         
         if (index.equalsIgnoreCase("all")){
-            List<String> indexNameList = Arrays.asList(indexNamesArray);
+            List<String> indexNameList = Arrays.asList(DataService.indexNamesArray);
             for (String tmpIndex : indexNameList) {
                 DataService.deleteData(tmpIndex);
             }
