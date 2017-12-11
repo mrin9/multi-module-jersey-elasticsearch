@@ -10,6 +10,7 @@ import io.swagger.annotations.*;
 import com.app.model.product.ProductResponse;
 import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
+import com.app.model.response.PageResponse;
 import com.app.model.user.Role;
 import com.app.model.user.User;
 import com.app.service.DataService;
@@ -35,6 +36,51 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class SystemController  extends BaseController {
+   
+    @GET 
+    @Path("/system/data/{index:users|products|orders}/_show_all")
+    @PermitAll
+    //@RolesAllowed({"USER", "ADMIN"})
+    @ApiOperation(value = "Search ", response = PageResponse.class)
+    public Response getAllData( 
+        @ApiParam(example="orders", allowableValues="users,products,orders", required=true)  @PathParam("index") String index, 
+        @ApiParam(example="0"    , defaultValue="0"  , required=true) @DefaultValue("0")     @QueryParam("from") int from,
+        @ApiParam(example="100"  , defaultValue="100", required=true) @DefaultValue("100")   @QueryParam("size") int size, 
+        @ApiParam(value="sort field, prefix with '-' for descending order", example="-listPrice", defaultValue="-listPrice") @DefaultValue("-listPrice") @QueryParam("sort")  String sort, 
+        @QueryParam("filter") String filter
+    ) 
+    throws Exception {
+        try {
+            org.elasticsearch.client.Response esResp;
+
+            if (from<=0){from=0;}
+            if (size==0 || size >500){size=500;}
+
+            String url = String.format("/%s/%s/_search", index,index);
+            Map<String, String> urlParams = Collections.emptyMap();
+            String submitData = ("{" 
+               + "   `from`:%s" 
+               + "  ,`size`:%s" 
+               + "  ,`query`:{" 
+               + "    `match_all`:{}" 
+               + "  }" 
+               + "}").replace('`', '"');
+            submitData = String.format(submitData, from,size);
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+
+            esResp = ElasticClient.rest.performRequest("GET", url, urlParams, submitJsonEntity);
+            ObjectNode esRespNode = ElasticClient.parseResponse(esResp);
+            return Response.ok(esRespNode).build();
+        }
+        catch (IOException e){
+            log.info("Exeception:[" + e.getClass().getName()+"] " +  e.getMessage()  );
+            log.info("Stack Trace:[" + ExceptionUtils.getStackTrace(e));
+            ObjectNode esRespNode = ElasticClient.parseException(e);
+            return Response.ok(esRespNode).build();
+        }
+    }
+    
+    
     
     @DELETE 
     @Path("/system/data/{index:users|products|orders|all}/_remove_data")
@@ -70,22 +116,21 @@ public class SystemController  extends BaseController {
         @ApiParam(example="{\"from\":0 ,\"size\":10, \"query\":{\"match_all\":{}}}")  @QueryParam("data") String data
     ) throws Exception{
         try {
-            org.elasticsearch.client.Response elSearchResp;
+            org.elasticsearch.client.Response esResp;
             Map<String, String> urlParams = Collections.emptyMap();
             HttpEntity submitJsonEntity;
 
             if (StringUtils.isBlank(data)){
-                elSearchResp = ElasticClient.rest.performRequest(method, url, urlParams);
+                esResp = ElasticClient.rest.performRequest(method, url, urlParams);
             }
             else{
                 submitJsonEntity = new NStringEntity(data, ContentType.APPLICATION_JSON);
-                elSearchResp = ElasticClient.rest.performRequest(method, url, urlParams, submitJsonEntity);
+                esResp = ElasticClient.rest.performRequest(method, url, urlParams, submitJsonEntity);
             }
-            ObjectNode esRespNode = ElasticClient.parseResponse(elSearchResp);
+            ObjectNode esRespNode = ElasticClient.parseResponse(esResp);
             return Response.ok(esRespNode).build();
         }
         catch (IOException e){
-            
             log.info("Exeception:[" + e.getClass().getName()+"] " +  e.getMessage()  );
             log.info("Stack Trace:[" + ExceptionUtils.getStackTrace(e));
             ObjectNode esRespNode = ElasticClient.parseException(e);

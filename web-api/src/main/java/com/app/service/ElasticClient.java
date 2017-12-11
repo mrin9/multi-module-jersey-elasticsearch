@@ -52,7 +52,6 @@ public class ElasticClient {
     }
     
     public static ObjectNode parseResponse(Response esResp) {
-        log.info("Inside ParseResponse");
         ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
         try {
             JsonNode esRespNode = getJsonFromESResponse(esResp);
@@ -95,21 +94,47 @@ public class ElasticClient {
             log.info("Response Parse IOException");
             respJsonNode.put("msgType", "ERROR");
             respJsonNode.put("msg", "Response IOException");
-            respJsonNode.put("exception", e.getMessage());
-
+            respJsonNode.put("exception", "[" + e.getClass() +"] " + e.getMessage());
             return respJsonNode;
         } 
         catch (ParseException e) {
             log.info("Jackson JSON Parse Exception");
             respJsonNode.put("msgType", "ERROR");
             respJsonNode.put("msg", "Response JSON Parse Exception");
-            respJsonNode.put("exception", e.getMessage());
+            respJsonNode.put("exception", "[" + e.getClass() +"] " + e.getMessage());
             return respJsonNode;
         }
     }
     
-    public static ObjectNode parseException(Exception ex) {
+    public static MultiMessageResponse parseDeleteByQueryResponse(Response esResp, String successMsg, String notFoundMsg, String errorMsg ) {
         MultiMessageResponse restResp = new MultiMessageResponse();
+        ObjectNode respJsonNode = parseResponse(esResp);
+        int total=0, deleted =0;
+        if (respJsonNode.has("esResponse")){
+            JsonNode actualEsResNode = respJsonNode.path("esResponse");
+            total = actualEsResNode.path("total").asInt(0);
+            deleted = actualEsResNode.path("deleted").asInt(0);
+            if (total==0){
+                restResp.setErrorMessage(notFoundMsg);
+            }
+            else if (total > 0 & total == deleted ){
+                restResp.setSuccessMessage(successMsg);
+            }
+            else{
+                restResp.setErrorMessage(errorMsg);
+            }
+        }
+        else if (respJsonNode.has("exception")){
+            restResp.setErrorMessage(respJsonNode.path("exception").asText("_exception"));
+        }
+        else{
+            restResp.setErrorMessage("Unknown Error");
+        }
+        return restResp;
+    }
+    
+    
+    public static ObjectNode parseException(Exception ex) {
         ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
         String errMsg ="";
         if (ex instanceof ResponseException){
@@ -138,8 +163,9 @@ public class ElasticClient {
         respJsonNode.put("msgType", "ERROR");
         respJsonNode.put("msg", errMsg);
         return respJsonNode;
-
     }
+    
+    
 
     public static String getStringFromESResponse(Response esResp) {
         try {

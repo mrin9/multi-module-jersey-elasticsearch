@@ -6,7 +6,7 @@ import lombok.*;
 
 @Data
 @ApiModel(value = "LoginInputModel", description="Login input model")
-public class LoginInputModel {
+public class LoginInput {
 
     @ApiModelProperty(value = "User Name", example = "demo")
     private String  userId;

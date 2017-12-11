@@ -5,18 +5,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "LoginOutputModel", description="Login object")
-public class LoginOutputModel {
+public class Login {
 
     private String username;
     private String emailAddresss;
     private String role;
     private String token;
 
-    public LoginOutputModel(User user, String token) {
+    public Login(User user, String token) {
         this(user.getUserName(),user.getEmail(), user.getRole().toString(), token);
     }
 
-    public LoginOutputModel(String username, String emailAddresss, String role, String token) {
+    public Login(String username, String emailAddresss, String role, String token) {
         super();
         this.username = username;
         this.emailAddresss = emailAddresss;

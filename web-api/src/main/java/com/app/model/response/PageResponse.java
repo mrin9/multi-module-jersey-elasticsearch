@@ -13,23 +13,36 @@ public class PageResponse extends BaseResponse {
     public PageResponse() {}
     
     public PageResponse(int totalItems, int pageSize) {
-        calculatePageStats(totalItems, pageSize);
+        setPageStats(totalItems, pageSize);
         currentPageNumber = 1;
-        this.setSuccessMessage("Total " + totalItems + " items ");
     }
 
     public PageResponse(int totalItems, int pageSize, int currentPageNumber) {
-        calculatePageStats(totalItems, pageSize);
+        setPageStats(totalItems, pageSize);
         this.currentPageNumber = (currentPageNumber > 0 && currentPageNumber <= totalPages)? currentPageNumber : 1;
-        this.setSuccessMessage("Total " + totalItems + " items ");
     }
 
-    private void calculatePageStats(int totalItems, int pageSize){
+    public void setPageStats(int totalItems, int pageSize){
         if (totalItems>0 && pageSize > 0){
             this.totalItems = totalItems;
             this.pageSize =  pageSize;
             this.totalPages = (int)(totalItems/pageSize) + (totalItems%pageSize==0?0:1);
             this.currentPageNumber = 1;
+            this.setSuccessMessage("Total " + this.totalItems + " items ");
         }
     }
+    
+    public void setPageStats(int totalItems, int pageSize, int from, int itemsInPage){
+        if (totalItems>0 && pageSize > 0 && from <= totalItems){
+            this.totalItems = totalItems;
+            this.pageSize =  pageSize;
+            this.totalPages = (int)(totalItems/pageSize)  + (totalItems%pageSize==0?0:1);
+            this.currentPageNumber = (int)(from/pageSize) + (from%pageSize==0?0:1);
+            this.itemsInPage = itemsInPage;
+            this.setSuccessMessage("Total " + this.totalItems + " items ");
+        }
+    }
+    
+    
+    
 }

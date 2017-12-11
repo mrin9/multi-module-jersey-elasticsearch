@@ -35,9 +35,9 @@ public class UserController extends BaseController{
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Login as a User", response = LoginResponse.class)
     @Path("/login")
-    public Response login(LoginInputModel loginModel) {
+    public Response login(LoginInput loginModel) {
         String msg="";
-        LoginOutputModel loginOutput;
+        Login loginOutput;
 
         String userId = loginModel.getUserId();
         String password = loginModel.getPassword();
@@ -74,7 +74,7 @@ public class UserController extends BaseController{
                     String token = TokenService.createTokenForUser(user);
                     log.info(respSourceNode.toString());
                     log.info(token);
-                    loginOutput = new LoginOutputModel(user,token);
+                    loginOutput = new Login(user,token);
                     return Response.ok(new LoginResponse(loginOutput)).build();
                 }
                 else{
@@ -95,7 +95,7 @@ public class UserController extends BaseController{
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getMsg() {
-        LoginOutputModel loginOutput = new LoginOutputModel("name", "name@email.com","ADMIN", "XXX.XXX.XXX");
+        Login loginOutput = new Login("name", "name@email.com","ADMIN", "XXX.XXX.XXX");
         //BaseResponse resp = new BaseResponse();
         //resp.setSuccesMessage("This is Fine");
         return Response.ok(new LoginResponse(loginOutput)).build();

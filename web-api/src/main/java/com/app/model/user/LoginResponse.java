@@ -1,19 +1,19 @@
 package com.app.model.user;
 
-import com.app.model.user.LoginOutputModel;
+import com.app.model.user.Login;
 import com.app.model.response.BaseResponse;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "LoginResponseModel", description="Login response object")
 public class LoginResponse extends BaseResponse {
     
-    private LoginOutputModel data;
+    private Login data;
 	
-    public LoginResponse(LoginOutputModel loginUserModel) {
+    public LoginResponse(Login loginUserModel) {
         setMsgType(MessageTypeEnum.SUCCESS);
         this.data = loginUserModel;
     }
 
-    public LoginOutputModel getData() {return data;}
-    public void setData(LoginOutputModel data) {this.data = data;}
+    public Login getData() {return data;}
+    public void setData(Login data) {this.data = data;}
 }
