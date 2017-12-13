@@ -25,7 +25,7 @@ public class TokenService {
 
         User user = new User();
         user.setUserId( (String)claims.get("userId"));
-        user.setRole(Role.valueOf((String)claims.get("role")));
+        user.setRole((String)claims.get("role"));
         return user;
     }
 

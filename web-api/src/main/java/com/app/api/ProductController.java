@@ -107,8 +107,6 @@ public class ProductController extends BaseController{
     
     @POST	
     @PermitAll
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/products")
     @ApiOperation(value = "Add a new product ", response = BaseResponse.class)
     public Response insertProduct (ProductInput prodIn) throws Exception {

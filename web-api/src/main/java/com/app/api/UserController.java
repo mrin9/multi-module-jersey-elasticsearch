@@ -27,72 +27,46 @@ import org.apache.http.nio.entity.NStringEntity;
 @Log4j2
 @Path ("")
 @Api(value = "Login and User")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserController extends BaseController{
-    
-    private org.elasticsearch.client.Response esResp;
-    private Map<String, String> urlParams;
     
     @POST	
     @PermitAll
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Login as a User", response = LoginResponse.class)
     @Path("/login")
-    public Response login(LoginInput loginModel) {
-        String msg="";
+    public Response login(LoginInput loginModel) throws Exception {
         Login loginOutput;
+        Map<String, String> urlParams = Collections.emptyMap();
+        String submitData = ("{" 
+           + " `query`: { "
+           + "   `bool`: {"
+           + "     `must`: ["
+           + "       {`term`:{`userId`:`%s`}}," 
+           + "       {`term`:{`password`:`%s`}}" 
+           + "     ]" 
+           + "   }" 
+           + " }" 
+           + "}").replace('`', '"');
+        submitData = String.format(submitData, loginModel.getUserId() ,loginModel.getPassword());
+        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
 
-        String userId = loginModel.getUserId();
-        String password = loginModel.getPassword();
-        String qParamVal = "userId:"+ userId + " AND password:" + password;
-
-        urlParams = new HashMap<>();
-        urlParams.put("q", qParamVal);
-        urlParams.put("filter_path", "hits.hits");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        BaseResponse resp = new MultiMessageResponse();
-                
-        try {
-            esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search", urlParams);
-            
-            if (esResp.getStatusLine().getStatusCode() == 200){
-                String responseBody = EntityUtils.toString(esResp.getEntity());
-                JsonNode respJsonNode = objectMapper.readTree(responseBody);
-                JsonNode respSourceNode = respJsonNode.path("hits").path("hits");
-                log.info("ES Response: " + responseBody);
-                if ( respSourceNode == null || respSourceNode.isMissingNode()){
-                    resp.setErrorMessage("Internal Error: Search response structure is incorrect ");
-                    return Response.ok(resp).build();
-                }
-                
-                if (respSourceNode.isArray() && respSourceNode.has(0)){
-                    respSourceNode = respSourceNode.get(0).path("_source"); // This is the standard structure of elasticsearch _serach queries
-                    User user = new User(
-                        respSourceNode.path("userId").asText(),
-                        respSourceNode.path("userName").textValue(),
-                        respSourceNode.path("email").textValue(),
-                        respSourceNode.path("role").textValue()
-                    );
-                    String token = TokenService.createTokenForUser(user);
-                    log.info(respSourceNode.toString());
-                    log.info(token);
-                    loginOutput = new Login(user,token);
-                    return Response.ok(new LoginResponse(loginOutput)).build();
-                }
-                else{
-                    resp.setErrorMessage("incorrect username or passowrd");
-                }
-            }
+        org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+        Map.Entry<Integer, List<User>> totalAndList  = ElasticClient.<User>getTotalAndListFromSearchQueryResponse(esResp, User.class);
+        int total = (int)totalAndList.getKey();
+        List<User> users = totalAndList.getValue();
+        if (total==1){
+            User user = users.get(0);
+            String token = TokenService.createTokenForUser(user);
+            loginOutput = new Login(user,token);
+            return Response.ok(new LoginResponse(loginOutput)).build();
         }
-        catch (IOException | ParseException e) {
-            ObjectNode esRespNode = ElasticClient.parseException(e);
-            return Response.ok(esRespNode).build();
+        else{
+            BaseResponse resp = new BaseResponse();
+            resp.setErrorMessage("incorrect username or passowrd");
+            return Response.ok(resp).build();
         }
-        return Response.ok(resp).build();
-
     }
-    
     
     
     @GET 
@@ -110,7 +84,6 @@ public class UserController extends BaseController{
         if (from<=0){from=0;}
         if (size==0 || size >500){size=500;}
 
-        org.elasticsearch.client.Response esResp;
         Map<String, String> urlParams = Collections.emptyMap();
         String submitData = ("{" 
            + "   `from` :%s" 
@@ -120,10 +93,9 @@ public class UserController extends BaseController{
         submitData = String.format(submitData, from,size);
 
         HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+        org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
         UserResponse resp = new UserResponse();
-        //resp.updateFromEsResponse(esResp, from, size);
-        
+        resp.updateFromEsResponse(esResp, from, size);
         return Response.ok(resp).build();
 
     }

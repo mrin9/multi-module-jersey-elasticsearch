@@ -14,21 +14,14 @@ import org.elasticsearch.client.Response;
 public class UserResponse extends PageResponse {
     private List<User> items = new ArrayList<>();
     
-    /*
     public void updateFromEsResponse(Response esResp, int from, int size ) throws IOException, ParseException{
-        JsonNode esRespNode = ElasticClient.getJsonNodeResponse(esResp);
-        if (esRespNode.has("error")==false) {
-            int total = esRespNode.path("hits").path("total").asInt(-1);
-            this.items = ElasticClient.getTotalAndListFromSearchQueryResponse(esRespNode, User.class);
-            if (this.items != null){
-                this.setPageStats(total, size, from, items.size() );
-            }
-        }
-        else{
-            this.setErrorMessage("Unable to parse elastic search response structure");
+        Map.Entry<Integer, List<User>> totalAndList  = ElasticClient.<User>getTotalAndListFromSearchQueryResponse(esResp, User.class);
+        int total = (int)totalAndList.getKey();
+        this.items = totalAndList.getValue();
+        if (this.items != null){
+            this.setPageStats(total, size, from, items.size() );
         }
     } 
-    */
     
     
 }
