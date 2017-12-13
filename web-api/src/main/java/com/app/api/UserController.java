@@ -13,13 +13,16 @@ import lombok.extern.log4j.Log4j2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import com.app.api.BaseController;
 import com.app.service.ElasticClient;
 import com.app.model.user.*;
 import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
 import com.app.service.TokenService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.swagger.annotations.ApiParam;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.nio.entity.NStringEntity;
 
 @Log4j2
 @Path ("")
@@ -66,7 +69,7 @@ public class UserController extends BaseController{
                 if (respSourceNode.isArray() && respSourceNode.has(0)){
                     respSourceNode = respSourceNode.get(0).path("_source"); // This is the standard structure of elasticsearch _serach queries
                     User user = new User(
-                        respSourceNode.path("userId").textValue(),
+                        respSourceNode.path("userId").asText(),
                         respSourceNode.path("userName").textValue(),
                         respSourceNode.path("email").textValue(),
                         respSourceNode.path("role").textValue()
@@ -89,6 +92,45 @@ public class UserController extends BaseController{
         return Response.ok(resp).build();
 
     }
+    
+    
+    
+    @GET 
+    @Path("/users")
+    @PermitAll
+    //@RolesAllowed({"USER", "ADMIN"})
+    @ApiOperation(value = "Serach Users ", response = UserResponse.class)
+    public Response search( 
+        @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
+        @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
+        @ApiParam(value="sort field, prefix with '-' for descending order", example="-productId", defaultValue="-productId")  @QueryParam("sort")  String sort, 
+        @QueryParam("filter") String filter
+    ) throws Exception {
+        
+        if (from<=0){from=0;}
+        if (size==0 || size >500){size=500;}
+
+        org.elasticsearch.client.Response esResp;
+        Map<String, String> urlParams = Collections.emptyMap();
+        String submitData = ("{" 
+           + "   `from` :%s" 
+           + "  ,`size` :%s" 
+           + "  ,`query`:{`match_all`:{} }" 
+           + "}").replace('`', '"');
+        submitData = String.format(submitData, from,size);
+
+        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+        esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+        UserResponse resp = new UserResponse();
+        //resp.updateFromEsResponse(esResp, from, size);
+        
+        return Response.ok(resp).build();
+
+    }
+    
+    
+    
+    
     
     @GET
     @Path("/message")

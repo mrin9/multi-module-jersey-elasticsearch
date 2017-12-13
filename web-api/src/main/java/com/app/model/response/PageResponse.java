@@ -37,7 +37,12 @@ public class PageResponse extends BaseResponse {
             this.totalItems = totalItems;
             this.pageSize =  pageSize;
             this.totalPages = (int)(totalItems/pageSize)  + (totalItems%pageSize==0?0:1);
-            this.currentPageNumber = (int)(from/pageSize) + (from%pageSize==0?0:1);
+            if (from == 0){
+                this.currentPageNumber = 1;
+            }
+            else{
+                this.currentPageNumber = (int)(from/pageSize) + (from%pageSize==0?0:1);
+            }
             this.itemsInPage = itemsInPage;
             this.setSuccessMessage("Total " + this.totalItems + " items ");
         }

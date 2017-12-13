@@ -38,11 +38,15 @@ public class ProductController extends BaseController{
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
         @ApiParam(value="sort field, prefix with '-' for descending order", example="-productId", defaultValue="-productId")  @QueryParam("sort")  String sort, 
         @QueryParam("filter") String filter
-    ) 
-    throws Exception {
+    ) throws Exception {
+        
         User userFromToken = (User)sc.getUserPrincipal();
         if (from<=0){from=0;}
         if (size==0 || size >500){size=500;}
+       
+        org.elasticsearch.client.Response esResp;
+        Map<String, String> urlParams = Collections.emptyMap();
+
         String submitData = ("{" 
            + "   `from` :%s" 
            + "  ,`size` :%s" 
@@ -51,13 +55,11 @@ public class ProductController extends BaseController{
            + "  }" 
            + "}").replace('`', '"');
         submitData = String.format(submitData, from,size);
-        org.elasticsearch.client.Response esResp;
-        Map<String, String> urlParams = Collections.emptyMap();
 
         HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
         esResp = ElasticClient.rest.performRequest("GET", "/products/products/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
         ProductResponse resp = new ProductResponse();
-        resp.parseFromEsResponse(esResp, from, size);
+        resp.updateFromEsResponse(esResp, from, size);
         
         return Response.ok(resp).build();
 
@@ -73,7 +75,7 @@ public class ProductController extends BaseController{
         User userFromToken = (User)sc.getUserPrincipal();
         org.elasticsearch.client.Response esResp;
         Map<String, String> urlParams = Collections.emptyMap();
-
+        BaseResponse resp = new BaseResponse();
         String submitData = ("{" 
            + "  `query`:{" 
            + "     `term`:{ `productId`: `%s` }"
@@ -83,11 +85,22 @@ public class ProductController extends BaseController{
         submitData = String.format(submitData, productId);
         HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
         esResp = ElasticClient.rest.performRequest("POST", "/products/products/_delete_by_query", urlParams, submitJsonEntity);
-        MultiMessageResponse resp =  ElasticClient.parseDeleteByQueryResponse(esResp
-            , String.format("Deleted product [Product ID:%s]", productId)
-            , String.format("Product not found [Product ID:%s]", productId)
-            , String.format("Error deleting product [Product ID:%s]", productId)
-        );
+        Map.Entry<Integer, String> deleteMsg  = ElasticClient.getDeleteByQueryResponse(esResp);
+        
+        if (null == deleteMsg.getKey()){
+            resp.setErrorMessage(String.format("%s products deleted (product-id:%s) ",deleteMsg.getKey(),productId));
+        }
+        else switch (deleteMsg.getKey()) {
+            case -1:
+                resp.setErrorMessage(String.format("Error while deleting (product-id:%s) ",productId));
+                break;
+            case 0:
+                resp.setErrorMessage(String.format("Product not found (product-id:%s) ",productId));
+                break;
+            default:
+                resp.setErrorMessage(String.format("%s products deleted (product-id:%s) ",deleteMsg.getKey(),productId));
+                break;
+        }
         return Response.ok(resp).build();
 
     }

@@ -13,7 +13,13 @@ public class User implements Serializable, Principal {
     private String email;
     private Role role;
     private boolean isActive;
-
+    private String address1;
+    private String address2;
+    private String postal;
+    private String city;
+    private String state;
+    private String country;
+    
     public User(){
         this("new", "new", "", "USER" , true, "");
     }

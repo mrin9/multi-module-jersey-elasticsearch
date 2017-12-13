@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.model.product.Product;
 import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,6 +27,10 @@ import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.ElasticsearchCorruptionException;
 import org.elasticsearch.ElasticsearchSecurityException;
 import java.net.ConnectException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.elasticsearch.client.ResponseException;
 
@@ -51,10 +56,117 @@ public class ElasticClient {
         simpleRest = new RestHighLevelClient(serverAddress);
     }
     
+    public static String getStringFromResponse(Response esResp) {
+        try {
+            return EntityUtils.toString(esResp.getEntity());
+        }
+        catch (IOException e){
+            log.error("Unable to get Response Body: " + e.getMessage() );
+            return "";
+        }
+    }
+
+    public static JsonNode getJsonNodeResponse(Response esResp) throws IOException, ParseException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(getStringFromResponse(esResp));
+    }
+
+    
+    //Return total and List of Items (if total is -1 it indicates there is some error
+    public static <T> Map.Entry<Integer, List<T>>  getTotalAndListFromSearchQueryResponse(Response esResp, Class<T> genericClass)  throws IOException, ParseException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        Integer total=0;
+        List<T> list = new ArrayList<>();
+        JsonNode esRespNode = ElasticClient.getJsonNodeResponse(esResp);
+        Map.Entry<Integer, List<T>> returnVal;
+        
+        if (esRespNode.has("error")==false) {
+            total = esRespNode.path("hits").path("total").asInt(-1);
+            JsonNode nodeTree =  esRespNode.path("hits").path("hits");
+            if (nodeTree.isArray()){
+                for (int i=0; i < nodeTree.size(); i++){
+                    JsonNode tmpNode = nodeTree.get(i).path("_source");
+                    if (tmpNode.isMissingNode()==false){
+                        T genericInstance = (T) mapper.convertValue(tmpNode, genericClass);
+                        list.add(genericInstance);
+                    }
+                }
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(total, list);
+            }
+            else{
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, list);
+            }
+        }
+        else{
+            returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, list);
+        }
+        return returnVal;
+    }    
+    
+    /*
+    public static MultiMessageResponse getDeleteByQueryResponse(Response esResp, String successMsg, String notFoundMsg, String errorMsg ) {
+        MultiMessageResponse restResp = new MultiMessageResponse();
+        ObjectNode respJsonNode = parseResponse(esResp);
+        int total=0, deleted =0;
+        if (respJsonNode.has("esResponse")){
+            JsonNode actualEsResNode = respJsonNode.path("esResponse");
+            total = actualEsResNode.path("total").asInt(0);
+            deleted = actualEsResNode.path("deleted").asInt(0);
+            if (total==0){
+                restResp.setErrorMessage(notFoundMsg);
+            }
+            else if (total > 0 & total == deleted ){
+                restResp.setSuccessMessage(successMsg);
+            }
+            else{
+                restResp.setErrorMessage(errorMsg);
+            }
+        }
+        else if (respJsonNode.has("exception")){
+            restResp.setErrorMessage(respJsonNode.path("exception").asText("_exception"));
+        }
+        else{
+            restResp.setErrorMessage("Unknown Error");
+        }
+        return restResp;
+    }
+    */
+    
+    // Returns no of items deleted and message (0 indicates not found, -1 indicates error and +ve is the count of delete iiems)
+    public static Map.Entry<Integer, String> getDeleteByQueryResponse(Response esResp ) {
+        ObjectNode respJsonNode = parseResponse(esResp);
+        Map.Entry<Integer, String> returnVal;
+        int total=0, deleted =0;
+        if (respJsonNode.has("esResponse")){
+            JsonNode actualEsResNode = respJsonNode.path("esResponse");
+            total = actualEsResNode.path("total").asInt(0);
+            deleted = actualEsResNode.path("deleted").asInt(0);
+            if (total==0){
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(0, "not_found:No items found ");
+            }
+            else if (total > 0 & total == deleted ){
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(deleted, String.format("success: Deleted %s items", deleted));
+            }
+            else{
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, String.format("incomplete_deletion: total=%s, deleted=%s", total, deleted));
+            }
+        }
+        else if (respJsonNode.has("exception")){
+            returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, String.format("error: %s", respJsonNode.path("exception").asText("_exception")));
+        }
+        else{
+            returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, "error: Unknown error");
+        }
+        return returnVal;
+    }
+    
+    
+    
     public static ObjectNode parseResponse(Response esResp) {
         ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
         try {
-            JsonNode esRespNode = getJsonFromESResponse(esResp);
+            JsonNode esRespNode = getJsonNodeResponse(esResp);
             if (esRespNode.has("error")){
                 JsonNode errNode = esRespNode.get("error");
                 if (errNode.isObject()){
@@ -106,33 +218,6 @@ public class ElasticClient {
         }
     }
     
-    public static MultiMessageResponse parseDeleteByQueryResponse(Response esResp, String successMsg, String notFoundMsg, String errorMsg ) {
-        MultiMessageResponse restResp = new MultiMessageResponse();
-        ObjectNode respJsonNode = parseResponse(esResp);
-        int total=0, deleted =0;
-        if (respJsonNode.has("esResponse")){
-            JsonNode actualEsResNode = respJsonNode.path("esResponse");
-            total = actualEsResNode.path("total").asInt(0);
-            deleted = actualEsResNode.path("deleted").asInt(0);
-            if (total==0){
-                restResp.setErrorMessage(notFoundMsg);
-            }
-            else if (total > 0 & total == deleted ){
-                restResp.setSuccessMessage(successMsg);
-            }
-            else{
-                restResp.setErrorMessage(errorMsg);
-            }
-        }
-        else if (respJsonNode.has("exception")){
-            restResp.setErrorMessage(respJsonNode.path("exception").asText("_exception"));
-        }
-        else{
-            restResp.setErrorMessage("Unknown Error");
-        }
-        return restResp;
-    }
-    
     
     public static ObjectNode parseException(Exception ex) {
         ObjectNode respJsonNode = JsonNodeFactory.instance.objectNode();
@@ -165,22 +250,11 @@ public class ElasticClient {
         return respJsonNode;
     }
     
+
+    
     
 
-    public static String getStringFromESResponse(Response esResp) {
-        try {
-            return EntityUtils.toString(esResp.getEntity());
-        }
-        catch (IOException e){
-            log.error("Unable to get Response Body: " + e.getMessage() );
-            return "";
-        }
-    }
 
-    public static JsonNode getJsonFromESResponse(Response esResp) throws IOException, ParseException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readTree(getStringFromESResponse(esResp));
-    }
-
+    
     
 }
