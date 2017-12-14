@@ -5,8 +5,6 @@ import lombok.*;
 import java.util.*;
 import com.app.model.response.*;
 import com.app.service.ElasticClient;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.ParseException;

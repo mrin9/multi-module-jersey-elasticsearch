@@ -1,40 +1,40 @@
 {"create": {"_id":"P1"}}
-{"productId":"P1", "productName":"Nikon D810", "productType":"Camera", "unit":"piece", "listPrice":"100", "quantityOnHand":"15", "reorderLevel":"9"}
+{"productId":"P1", "productName":"Nikon D810", "productType":"Camera", "unit":"piece", "listPrice":"130", "quantityOnHand":"23", "reorderLevel":"11"}
 {"create": {"_id":"P2"}}
-{"productId":"P2", "productName":"Canon Mark IV", "productType":"Camera", "unit":"piece", "listPrice":"510", "quantityOnHand":"9", "reorderLevel":"13"}
+{"productId":"P2", "productName":"Canon Mark IV", "productType":"Camera", "unit":"piece", "listPrice":"440", "quantityOnHand":"25", "reorderLevel":"8"}
 {"create": {"_id":"P3"}}
-{"productId":"P3", "productName":"Nikon D500", "productType":"Camera", "unit":"piece", "listPrice":"540", "quantityOnHand":"22", "reorderLevel":"5"}
+{"productId":"P3", "productName":"Nikon D500", "productType":"Camera", "unit":"piece", "listPrice":"190", "quantityOnHand":"9", "reorderLevel":"15"}
 {"create": {"_id":"P4"}}
-{"productId":"P4", "productName":"Pentax K-1", "productType":"Camera", "unit":"piece", "listPrice":"310", "quantityOnHand":"17", "reorderLevel":"11"}
+{"productId":"P4", "productName":"Pentax K-1", "productType":"Camera", "unit":"piece", "listPrice":"250", "quantityOnHand":"14", "reorderLevel":"11"}
 {"create": {"_id":"P5"}}
-{"productId":"P5", "productName":"Nexus 6", "productType":"Phone", "unit":"piece", "listPrice":"410", "quantityOnHand":"15", "reorderLevel":"15"}
+{"productId":"P5", "productName":"Nexus 6", "productType":"Phone", "unit":"piece", "listPrice":"550", "quantityOnHand":"9", "reorderLevel":"6"}
 {"create": {"_id":"P6"}}
-{"productId":"P6", "productName":"Moto Z", "productType":"Phone", "unit":"piece", "listPrice":"700", "quantityOnHand":"26", "reorderLevel":"7"}
+{"productId":"P6", "productName":"Moto Z", "productType":"Phone", "unit":"piece", "listPrice":"370", "quantityOnHand":"18", "reorderLevel":"10"}
 {"create": {"_id":"P7"}}
-{"productId":"P7", "productName":"iPhone 8", "productType":"Phone", "unit":"piece", "listPrice":"520", "quantityOnHand":"26", "reorderLevel":"14"}
+{"productId":"P7", "productName":"iPhone 8", "productType":"Phone", "unit":"piece", "listPrice":"610", "quantityOnHand":"15", "reorderLevel":"15"}
 {"create": {"_id":"P8"}}
-{"productId":"P8", "productName":"Google Pixel", "productType":"Phone", "unit":"piece", "listPrice":"60", "quantityOnHand":"24", "reorderLevel":"16"}
+{"productId":"P8", "productName":"Google Pixel", "productType":"Phone", "unit":"piece", "listPrice":"530", "quantityOnHand":"14", "reorderLevel":"14"}
 {"create": {"_id":"P9"}}
-{"productId":"P9", "productName":"Galaxy S7", "productType":"Phone", "unit":"piece", "listPrice":"100", "quantityOnHand":"22", "reorderLevel":"10"}
+{"productId":"P9", "productName":"Galaxy S7", "productType":"Phone", "unit":"piece", "listPrice":"320", "quantityOnHand":"27", "reorderLevel":"7"}
 {"create": {"_id":"P10"}}
-{"productId":"P10", "productName":"HTC 10", "productType":"Tablet", "unit":"piece", "listPrice":"370", "quantityOnHand":"15", "reorderLevel":"6"}
+{"productId":"P10", "productName":"HTC 10", "productType":"Tablet", "unit":"piece", "listPrice":"780", "quantityOnHand":"11", "reorderLevel":"6"}
 {"create": {"_id":"P11"}}
-{"productId":"P11", "productName":"Note", "productType":"Tablet", "unit":"piece", "listPrice":"50", "quantityOnHand":"22", "reorderLevel":"14"}
+{"productId":"P11", "productName":"Note", "productType":"Tablet", "unit":"piece", "listPrice":"700", "quantityOnHand":"25", "reorderLevel":"16"}
 {"create": {"_id":"P12"}}
-{"productId":"P12", "productName":"iPad Air", "productType":"Tablet", "unit":"piece", "listPrice":"750", "quantityOnHand":"10", "reorderLevel":"8"}
+{"productId":"P12", "productName":"iPad Air", "productType":"Tablet", "unit":"piece", "listPrice":"380", "quantityOnHand":"24", "reorderLevel":"6"}
 {"create": {"_id":"P13"}}
-{"productId":"P13", "productName":"Fire HD", "productType":"Tablet", "unit":"piece", "listPrice":"600", "quantityOnHand":"8", "reorderLevel":"5"}
+{"productId":"P13", "productName":"Fire HD", "productType":"Tablet", "unit":"piece", "listPrice":"260", "quantityOnHand":"20", "reorderLevel":"5"}
 {"create": {"_id":"P14"}}
-{"productId":"P14", "productName":"Acer Aspire", "productType":"Laptop", "unit":"piece", "listPrice":"540", "quantityOnHand":"19", "reorderLevel":"12"}
+{"productId":"P14", "productName":"Acer Aspire", "productType":"Laptop", "unit":"piece", "listPrice":"400", "quantityOnHand":"21", "reorderLevel":"16"}
 {"create": {"_id":"P15"}}
-{"productId":"P15", "productName":"ThinkPad T365", "productType":"Laptop", "unit":"piece", "listPrice":"650", "quantityOnHand":"16", "reorderLevel":"15"}
+{"productId":"P15", "productName":"ThinkPad T365", "productType":"Laptop", "unit":"piece", "listPrice":"680", "quantityOnHand":"19", "reorderLevel":"9"}
 {"create": {"_id":"P16"}}
-{"productId":"P16", "productName":"Chromebook", "productType":"Laptop", "unit":"piece", "listPrice":"330", "quantityOnHand":"26", "reorderLevel":"11"}
+{"productId":"P16", "productName":"Chromebook", "productType":"Laptop", "unit":"piece", "listPrice":"150", "quantityOnHand":"17", "reorderLevel":"16"}
 {"create": {"_id":"P17"}}
-{"productId":"P17", "productName":"MacBook 13.3", "productType":"Laptop", "unit":"piece", "listPrice":"370", "quantityOnHand":"21", "reorderLevel":"9"}
+{"productId":"P17", "productName":"MacBook 13.3", "productType":"Laptop", "unit":"piece", "listPrice":"580", "quantityOnHand":"25", "reorderLevel":"12"}
 {"create": {"_id":"P18"}}
-{"productId":"P18", "productName":"Asus Zenbook", "productType":"Laptop", "unit":"piece", "listPrice":"370", "quantityOnHand":"21", "reorderLevel":"16"}
+{"productId":"P18", "productName":"Asus Zenbook", "productType":"Laptop", "unit":"piece", "listPrice":"770", "quantityOnHand":"19", "reorderLevel":"16"}
 {"create": {"_id":"P19"}}
-{"productId":"P19", "productName":"Surface Book", "productType":"Laptop", "unit":"piece", "listPrice":"300", "quantityOnHand":"13", "reorderLevel":"16"}
+{"productId":"P19", "productName":"Surface Book", "productType":"Laptop", "unit":"piece", "listPrice":"250", "quantityOnHand":"20", "reorderLevel":"14"}
 {"create": {"_id":"P20"}}
-{"productId":"P20", "productName":"Dell XPS 13", "productType":"Laptop", "unit":"piece", "listPrice":"760", "quantityOnHand":"14", "reorderLevel":"9"}
+{"productId":"P20", "productName":"Dell XPS 13", "productType":"Laptop", "unit":"piece", "listPrice":"430", "quantityOnHand":"15", "reorderLevel":"15"}

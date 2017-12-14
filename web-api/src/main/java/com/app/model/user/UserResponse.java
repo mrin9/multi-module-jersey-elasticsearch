@@ -4,7 +4,6 @@ import java.util.*;
 import lombok.*;
 import com.app.model.response.*;
 import com.app.service.ElasticClient;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import org.apache.http.ParseException;
 import org.elasticsearch.client.Response;

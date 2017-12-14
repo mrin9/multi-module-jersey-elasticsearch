@@ -194,22 +194,27 @@ public class DataGenerator {
                     //Order Lines
                     int orderLineCount = rand.nextInt(6)+1;
                     String orderLines="";
+                    long orderPrice = 0;
                     for (int i=0; i<orderLineCount;i++){  // Generate Orderlines
                         int randomProductIndex =  rand.nextInt(prodList.size());
                         final String[] tmpProd = prodList.get(randomProductIndex);
-                        
+                        long prodPrice = Long.parseLong(tmpProd[4]);
+                        Integer tmpQuantity =1+rand.nextInt(3);
+                        long linePrice = prodPrice * tmpQuantity;
                         Map<String,String> orderLineParams = new HashMap<String, String>(){{
                             put("productId", tmpProd[0]);
                             put("productName", tmpProd[1]);
                             put("productType", tmpProd[2]);
-                            put("price", tmpProd[4]);
-                            put("quantity", Integer.toString(1+rand.nextInt(3)) );
+                            put("price", Long.toString(prodPrice));
+                            put("quantity", Integer.toString(tmpQuantity) );
                         }};
                         StrSubstitutor subOrderLines = new StrSubstitutor(orderLineParams);
                         orderLines = orderLines + "," + subOrderLines.replace(orderLineTemplate) ;
+                        orderPrice = orderPrice + linePrice;
                     }
                     
                     final String orderLinesData = orderLines.replaceFirst(",","").replace("\n", "");
+                    final String totalPrice = Long.toString(orderPrice);
                     Map<String,String> orderParams = new HashMap<String, String>(){{
                         put("orderId", orderId);
                         put("userId", tmpUser[0]);
@@ -225,6 +230,7 @@ public class DataGenerator {
                         put("city", faker.address().city());
                         put("state", faker.address().stateAbbr());
                         put("country", faker.address().country());
+                        put("totalPrice", totalPrice );
                         put("orderLines", orderLinesData );
                     }};
                     StrSubstitutor subOrder = new StrSubstitutor(orderParams);

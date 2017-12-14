@@ -7,23 +7,24 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Data
 public class Order  {
-    private Integer id;
-    private Integer employeeId;
-    private Integer customerId;
-    private Date    orderDate;
-    private Date    shippedDate;
-    private Date    paidDate;
-    private String  shipName;
-    private String  shipAddress1;
-    private String  shipAddress2;
-    private String  shipCity;
-    private String  shipState;
-    private String  shipPostalCode;
-    private String  shipCountry;
-    private BigDecimal shippingFee;
+    private String orderId;
+    private String userId;
+    private String userName;
+    private String userEmail;
     @ApiModelProperty(allowableValues = "Check, Cash, Card") private String paymentType;
     @ApiModelProperty(allowableValues = "On Hold, Shipped, Complete, New")private String orderStatus;
+    private Date   orderDate;
+    private Date   shippedDate;
+    private String address1;
+    private String address2;
+    private String postal;
+    private String city;
+    private String state;
+    private String country;
+    private Long totalPrice;
+    private List<OrderLine> orderLines;
 
+    /*
     //Constructors
     public Order(){}
     public Order(Integer  id   , Integer employeeId  , Integer customerId  , Date   orderDate   , String orderStatus,
@@ -47,5 +48,5 @@ public class Order  {
         this.paymentType = paymentType;
         this.paidDate    = paidDate;
     }
-
+    */
 }
