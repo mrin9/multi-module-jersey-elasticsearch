@@ -18,7 +18,10 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import io.swagger.annotations.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 
 
 @Log4j2
@@ -36,32 +39,49 @@ public class ProductController extends BaseController{
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
-        @ApiParam(value="sort field, prefix with '-' for descending order", example="-productId", defaultValue="-productId")  @QueryParam("sort")  String sort, 
+        @ApiParam(value="sort field, prefix with '-' for descending order", example="-listPrice", defaultValue="")  @QueryParam("sort")  String sort, 
         @QueryParam("filter") String filter
-    ) throws Exception {
+    ) {
         
         User userFromToken = (User)sc.getUserPrincipal();
         if (from<=0){from=0;}
         if (size==0 || size >500){size=500;}
-       
         org.elasticsearch.client.Response esResp;
         Map<String, String> urlParams = Collections.emptyMap();
+        String submitData = ("{"
+            + "   `from` :%s"
+            + "  ,`size` :%s"
+            + "  ,`query`:{"
+            + "     `match_all`:{}"
+            + "    }"
+            + "  ,`sort`:[%s]"
+            + "}").replace('`', '"');
 
-        String submitData = ("{" 
-           + "   `from` :%s" 
-           + "  ,`size` :%s" 
-           + "  ,`query`:{" 
-           + "     `match_all`:{}" 
-           + "  }" 
-           + "}").replace('`', '"');
-        submitData = String.format(submitData, from,size);
-
-        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        esResp = ElasticClient.rest.performRequest("GET", "/products/products/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-        ProductResponse resp = new ProductResponse();
-        resp.updateFromEsResponse(esResp, from, size);
+        String sortClause="", fieldName="", direction="";
+        if (StringUtils.isNotBlank(sort)){
+            sort = sort.trim();
+            if (sort.startsWith("-")){
+                direction = "desc";
+                fieldName = sort.substring(1);
+            }
+            else{
+                direction = "asc";
+                fieldName = sort;
+            }
+            sortClause = String.format("{`%s`: { `order`: `%s` }}",fieldName,direction).replace('`', '"');
+        }   
+        submitData = String.format(submitData, from, size, sortClause);
         
-        return Response.ok(resp).build();
+        try {
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            esResp = ElasticClient.rest.performRequest("GET", "/products/products/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+            ProductResponse resp = new ProductResponse();
+            resp.updateFromEsResponse(esResp, from, size);
+            return Response.ok(resp).build();
+        } 
+        catch (IOException e) {
+            return Response.ok(ElasticClient.parseException(e)).build();
+        }
 
     }
     
@@ -70,8 +90,7 @@ public class ProductController extends BaseController{
     @Path("/products/{productId}")
     @PermitAll
     @ApiOperation(value = "Delete product by ID ", response = BaseResponse.class)
-    public Response deleteProduct (@ApiParam(example="P1", required=true) @DefaultValue("")  @PathParam("productId") String productId) 
-    throws Exception {
+    public Response deleteProduct (@ApiParam(example="P1", required=true) @DefaultValue("")  @PathParam("productId") String productId) {
         User userFromToken = (User)sc.getUserPrincipal();
         org.elasticsearch.client.Response esResp;
         Map<String, String> urlParams = Collections.emptyMap();
@@ -81,27 +100,31 @@ public class ProductController extends BaseController{
            + "     `term`:{ `productId`: `%s` }"
            + "  }" 
            + "}").replace('`', '"');
+        try { 
+            submitData = String.format(submitData, productId);
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            esResp = ElasticClient.rest.performRequest("POST", "/products/products/_delete_by_query", urlParams, submitJsonEntity);
+            Map.Entry<Integer, String> deleteMsg  = ElasticClient.getDeleteByQueryResponse(esResp);
         
-        submitData = String.format(submitData, productId);
-        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        esResp = ElasticClient.rest.performRequest("POST", "/products/products/_delete_by_query", urlParams, submitJsonEntity);
-        Map.Entry<Integer, String> deleteMsg  = ElasticClient.getDeleteByQueryResponse(esResp);
-        
-        if (null == deleteMsg.getKey()){
-            resp.setErrorMessage(String.format("%s products deleted (product-id:%s) ",deleteMsg.getKey(),productId));
-        }
-        else switch (deleteMsg.getKey()) {
-            case -1:
-                resp.setErrorMessage(String.format("Error while deleting (product-id:%s) ",productId));
-                break;
-            case 0:
-                resp.setErrorMessage(String.format("Product not found (product-id:%s) ",productId));
-                break;
-            default:
+            if (null == deleteMsg.getKey()){
                 resp.setErrorMessage(String.format("%s products deleted (product-id:%s) ",deleteMsg.getKey(),productId));
-                break;
+            }
+            else switch (deleteMsg.getKey()) {
+                case -1:
+                    resp.setErrorMessage(String.format("Error while deleting (product-id:%s) ",productId));
+                    break;
+                case 0:
+                    resp.setErrorMessage(String.format("Product not found (product-id:%s) ",productId));
+                    break;
+                default:
+                    resp.setErrorMessage(String.format("%s products deleted (product-id:%s) ",deleteMsg.getKey(),productId));
+                    break;
+            }
+            return Response.ok(resp).build();
+        } 
+        catch (IOException e) {
+            return Response.ok(ElasticClient.parseException(e)).build();
         }
-        return Response.ok(resp).build();
 
     }
     
@@ -109,7 +132,7 @@ public class ProductController extends BaseController{
     @PermitAll
     @Path("/products")
     @ApiOperation(value = "Add a new product ", response = BaseResponse.class)
-    public Response insertProduct (ProductInput prodIn) throws Exception {
+    public Response insertProduct (ProductInput prodIn) {
         
         ObjectMapper mapper = new ObjectMapper();
         org.elasticsearch.client.Response esResp;
@@ -131,10 +154,7 @@ public class ProductController extends BaseController{
             return Response.ok(esRespNode).build();
         }
         catch (IOException e){
-            log.info("Exeception:[" + e.getClass().getName()+"] " +  e.getMessage()  );
-            log.info("Stack Trace:[" + ExceptionUtils.getStackTrace(e));
-            ObjectNode esRespNode = ElasticClient.parseException(e);
-            return Response.ok(esRespNode).build();
+            return Response.ok(ElasticClient.parseException(e)).build();        
         }
     }
 }

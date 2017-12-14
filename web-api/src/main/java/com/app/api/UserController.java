@@ -20,6 +20,7 @@ import com.app.model.response.MultiMessageResponse;
 import com.app.service.TokenService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
@@ -35,7 +36,7 @@ public class UserController extends BaseController{
     @PermitAll
     @ApiOperation(value = "Login as a User", response = LoginResponse.class)
     @Path("/login")
-    public Response login(LoginInput loginModel) throws Exception {
+    public Response login(LoginInput loginModel){
         Login loginOutput;
         Map<String, String> urlParams = Collections.emptyMap();
         String submitData = ("{" 
@@ -49,23 +50,28 @@ public class UserController extends BaseController{
            + " }" 
            + "}").replace('`', '"');
         submitData = String.format(submitData, loginModel.getUserId() ,loginModel.getPassword());
-        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-
-        org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-        Map.Entry<Integer, List<User>> totalAndList  = ElasticClient.<User>getTotalAndListFromSearchQueryResponse(esResp, User.class);
-        int total = (int)totalAndList.getKey();
-        List<User> users = totalAndList.getValue();
-        if (total==1){
-            User user = users.get(0);
-            String token = TokenService.createTokenForUser(user);
-            loginOutput = new Login(user,token);
-            return Response.ok(new LoginResponse(loginOutput)).build();
+        try{
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+            Map.Entry<Integer, List<User>> totalAndList  = ElasticClient.<User>getTotalAndListFromSearchQueryResponse(esResp, User.class);
+            int total = (int)totalAndList.getKey();
+            List<User> users = totalAndList.getValue();
+            if (total==1){
+                User user = users.get(0);
+                String token = TokenService.createTokenForUser(user);
+                loginOutput = new Login(user,token);
+                return Response.ok(new LoginResponse(loginOutput)).build();
+            }
+            else{
+                BaseResponse resp = new BaseResponse();
+                resp.setErrorMessage("incorrect username or passowrd");
+                return Response.ok(resp).build();
+            }
         }
-        else{
-            BaseResponse resp = new BaseResponse();
-            resp.setErrorMessage("incorrect username or passowrd");
-            return Response.ok(resp).build();
+        catch (IOException e) {
+            return Response.ok(ElasticClient.parseException(e)).build();
         }
+            
     }
     
     
@@ -77,31 +83,46 @@ public class UserController extends BaseController{
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
-        @ApiParam(value="sort field, prefix with '-' for descending order", example="-productId", defaultValue="-productId")  @QueryParam("sort")  String sort, 
+        @ApiParam(value="sort field, prefix with '-' for descending order", example="-userName", defaultValue="")  @QueryParam("sort")  String sort, 
         @QueryParam("filter") String filter
-    ) throws Exception {
+    ){
         
         if (from<=0){from=0;}
         if (size==0 || size >500){size=500;}
 
         Map<String, String> urlParams = Collections.emptyMap();
         String submitData = ("{" 
-           + "   `from` :%s" 
-           + "  ,`size` :%s" 
-           + "  ,`query`:{`match_all`:{} }" 
-           + "}").replace('`', '"');
-        submitData = String.format(submitData, from,size);
-
-        HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
-        org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-        UserResponse resp = new UserResponse();
-        resp.updateFromEsResponse(esResp, from, size);
-        return Response.ok(resp).build();
-
+            + "   `from` :%s" 
+            + "  ,`size` :%s" 
+            + "  ,`query`:{`match_all`:{} }" 
+            + "  ,`sort` :[%s]"
+            + "}").replace('`', '"');
+        String sortClause="", fieldName="", direction="";
+        if (StringUtils.isNotBlank(sort)){
+            sort = sort.trim();
+            if (sort.startsWith("-")){
+                direction = "desc";
+                fieldName = sort.substring(1);
+            }
+            else{
+                direction = "asc";
+                fieldName = sort;
+            }
+            sortClause = String.format("{`%s`: { `order`: `%s` }}",fieldName,direction).replace('`', '"');
+        }   
+        submitData = String.format(submitData, from, size, sortClause);
+        
+        try{
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+            UserResponse resp = new UserResponse();
+            resp.updateFromEsResponse(esResp, from, size);
+            return Response.ok(resp).build();
+        }
+        catch (IOException e) {
+            return Response.ok(ElasticClient.parseException(e)).build();
+        }
     }
-    
-    
-    
     
     
     @GET

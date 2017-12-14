@@ -104,35 +104,6 @@ public class ElasticClient {
         return returnVal;
     }    
     
-    /*
-    public static MultiMessageResponse getDeleteByQueryResponse(Response esResp, String successMsg, String notFoundMsg, String errorMsg ) {
-        MultiMessageResponse restResp = new MultiMessageResponse();
-        ObjectNode respJsonNode = parseResponse(esResp);
-        int total=0, deleted =0;
-        if (respJsonNode.has("esResponse")){
-            JsonNode actualEsResNode = respJsonNode.path("esResponse");
-            total = actualEsResNode.path("total").asInt(0);
-            deleted = actualEsResNode.path("deleted").asInt(0);
-            if (total==0){
-                restResp.setErrorMessage(notFoundMsg);
-            }
-            else if (total > 0 & total == deleted ){
-                restResp.setSuccessMessage(successMsg);
-            }
-            else{
-                restResp.setErrorMessage(errorMsg);
-            }
-        }
-        else if (respJsonNode.has("exception")){
-            restResp.setErrorMessage(respJsonNode.path("exception").asText("_exception"));
-        }
-        else{
-            restResp.setErrorMessage("Unknown Error");
-        }
-        return restResp;
-    }
-    */
-    
     // Returns no of items deleted and message (0 indicates not found, -1 indicates error and +ve is the count of delete iiems)
     public static Map.Entry<Integer, String> getDeleteByQueryResponse(Response esResp ) {
         ObjectNode respJsonNode = parseResponse(esResp);
@@ -200,6 +171,7 @@ public class ElasticClient {
                 respJsonNode.put("msg", "Response From Elasticseach");
                 respJsonNode.set("esResponse", esRespNode);
             }
+            log.info("Elasticsearch responded with an error:\n" + esRespNode.toString());
             return respJsonNode;
         } 
         catch (IOException e) {
@@ -210,7 +182,7 @@ public class ElasticClient {
             return respJsonNode;
         } 
         catch (ParseException e) {
-            log.info("Jackson JSON Parse Exception");
+            log.info("Jackson JSON Parse Exception (This is a rare case and will only occur if elasticsearch is not responding with a valid json)");
             respJsonNode.put("msgType", "ERROR");
             respJsonNode.put("msg", "Response JSON Parse Exception");
             respJsonNode.put("exception", "[" + e.getClass() +"] " + e.getMessage());
