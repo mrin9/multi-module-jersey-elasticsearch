@@ -1,6 +1,7 @@
 package com.app.api;
 
-import com.app.model.order.OrderResponse;
+//import com.app.model.order.OrderResponse;
+import com.app.model.order.Order;
 import java.io.*;
 import java.util.*;
 import javax.ws.rs.*;
@@ -30,7 +31,7 @@ public class OrderController extends BaseController{
     @Path("/orders")
     @PermitAll
     //@RolesAllowed({"USER", "ADMIN"})
-    @ApiOperation(value = "Serach Orders ", response = ProductResponse.class)
+    @ApiOperation(value = "Serach Orders ", response = PageResponse.class)
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
@@ -70,8 +71,8 @@ public class OrderController extends BaseController{
         try {
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             esResp = ElasticClient.rest.performRequest("GET", "/orders/orders/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-            OrderResponse resp = new OrderResponse();
-            resp.updateFromEsResponse(esResp, from, size);
+            PageResponse resp = new <Order>PageResponse();
+            resp.updateFromSearchResponse(esResp, Order.class, from, size);
             return Response.ok(resp).build();
         }
         catch (IOException ex) {

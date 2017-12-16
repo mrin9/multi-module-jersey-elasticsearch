@@ -1,15 +1,22 @@
 package com.app.model.response;
 
+import com.app.service.ElasticClient;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import lombok.*;
+import org.apache.http.ParseException;
+import org.elasticsearch.client.Response;
 
 @Data
-public class PageResponse extends BaseResponse {
+public class PageResponse<T> extends BaseResponse {
     private int totalItems;
     private int pageSize;
     private int totalPages;
     private int currentPageNumber;
     private int itemsInPage;  // for last page ItemsInPage and PageSize can be different
-
+    private List<T> items;
+    
     public PageResponse() {}
     
     public PageResponse(int totalItems, int pageSize) {
@@ -48,6 +55,14 @@ public class PageResponse extends BaseResponse {
         }
     }
     
+    public void updateFromSearchResponse(Response esResp, Class<T> genericClass, int from, int size ) throws IOException, ParseException{
+        Map.Entry<Integer, List<T>> totalAndList  = ElasticClient.<T>getTotalAndListFromSearchQueryResponse(esResp,  genericClass );
+        int total = (int)totalAndList.getKey();
+        this.items = totalAndList.getValue();
+        if (this.items != null){
+            this.setPageStats(total, size, from, items.size() );
+        }
+    } 
     
     
 }

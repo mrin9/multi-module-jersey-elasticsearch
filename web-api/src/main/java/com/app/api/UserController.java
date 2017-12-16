@@ -6,9 +6,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.annotation.security.PermitAll;
 
-import com.fasterxml.jackson.databind.*;
-import org.apache.http.ParseException;
-import org.apache.http.util.EntityUtils;
 import lombok.extern.log4j.Log4j2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,9 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import com.app.service.ElasticClient;
 import com.app.model.user.*;
 import com.app.model.response.BaseResponse;
-import com.app.model.response.MultiMessageResponse;
+import com.app.model.response.PageResponse;
 import com.app.service.TokenService;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -79,7 +75,7 @@ public class UserController extends BaseController{
     @Path("/users")
     @PermitAll
     //@RolesAllowed({"USER", "ADMIN"})
-    @ApiOperation(value = "Serach Users ", response = UserResponse.class)
+    @ApiOperation(value = "Serach Users ", response = PageResponse.class)
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
@@ -115,8 +111,8 @@ public class UserController extends BaseController{
         try{
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-            UserResponse resp = new UserResponse();
-            resp.updateFromEsResponse(esResp, from, size);
+            PageResponse resp = new <User>PageResponse();
+            resp.updateFromSearchResponse(esResp, User.class, from, size);
             return Response.ok(resp).build();
         }
         catch (IOException e) {

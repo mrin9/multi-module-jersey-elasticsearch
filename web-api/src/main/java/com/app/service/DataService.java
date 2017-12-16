@@ -51,7 +51,7 @@ public class DataService {
     
     public static Response deleteIndex(String index) throws Exception {
         if (index.equalsIgnoreCase("all")){
-            return ElasticClient.rest.performRequest("DELETE", "/*"); //Delete all indexes
+            return ElasticClient.rest.performRequest("DELETE", "orders,products,users"); //Delete all indexes
         }
         else if( Util.isValidIndex(index)){
             return ElasticClient.rest.performRequest("DELETE", "/"+index);

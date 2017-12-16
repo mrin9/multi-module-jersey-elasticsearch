@@ -13,13 +13,10 @@ import com.app.service.ElasticClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import io.swagger.annotations.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,7 +32,7 @@ public class ProductController extends BaseController{
     @Path("/products")
     @PermitAll
     //@RolesAllowed({"USER", "ADMIN"})
-    @ApiOperation(value = "Serach Products ", response = ProductResponse.class)
+    @ApiOperation(value = "Serach Products ", response = PageResponse.class)
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
@@ -75,8 +72,8 @@ public class ProductController extends BaseController{
         try {
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             esResp = ElasticClient.rest.performRequest("GET", "/products/products/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
-            ProductResponse resp = new ProductResponse();
-            resp.updateFromEsResponse(esResp, from, size);
+            PageResponse resp = new <Product>PageResponse();
+            resp.updateFromSearchResponse(esResp, Product.class, from, size);
             return Response.ok(resp).build();
         } 
         catch (IOException e) {

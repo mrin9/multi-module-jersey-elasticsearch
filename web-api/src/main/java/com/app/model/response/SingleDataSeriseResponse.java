@@ -2,10 +2,10 @@
 
 package com.app.model.response;
 
+import com.app.model.stats.SingleSerise;
 import lombok.*;
 import java.util.*;
 import io.swagger.annotations.*;
-import com.app.model.data.*;
 
 @Data
 @EqualsAndHashCode(callSuper=false)

@@ -5,11 +5,11 @@
       "users" :{
         "dynamic"   :"strict",        
         "properties":{
-          "userId"   :{"type": "text" ,"analyzer": "keyword" },            
-          "password" :{"type": "text" ,"analyzer": "keyword" },            
-          "userName" :{"type": "text" ,"analyzer": "keyword" },            
+          "userId"   :{"type": "keyword" },            
+          "password" :{"type": "keyword" },            
+          "userName" :{"type": "keyword" },            
           "email"    :{"type": "text" },            
-          "role"     :{"type": "text" ,"analyzer": "keyword" },
+          "role"     :{"type": "keyword" },
           "isActive" :{"type": "boolean"},
           "address1" :{"type": "text" },
           "address2" :{"type": "text" },
@@ -29,9 +29,9 @@
       "products":{
         "dynamic"   :"strict",        
         "properties":{
-          "productId"     : { "type": "text","analyzer": "keyword" },            
-          "productName"   : { "type": "text","analyzer": "keyword"  },
-          "productType"   : { "type": "text","analyzer": "keyword"  },
+          "productId"     : { "type": "keyword" },            
+          "productName"   : { "type": "keyword"  },
+          "productType"   : { "type": "keyword" },
           "listPrice"     : { "type": "long" },            
           "unit"          : { "type": "text" },
           "quantityOnHand": { "type": "long" },
@@ -47,12 +47,12 @@
       "orders":{
         "dynamic"   : "strict",        
         "properties":{
-          "orderId"    :{"type": "text" ,"analyzer": "keyword" },
-          "userId"     :{"type": "text" ,"analyzer": "keyword" },
-          "userName"   :{"type": "text" ,"analyzer": "keyword" },
-          "userEmail"  :{"type": "text" },
-          "orderStatus":{"type": "text" },
-          "paymentType":{"type": "text" },
+          "orderId"    :{"type": "keyword" },
+          "userId"     :{"type": "keyword" },
+          "userName"   :{"type": "keyword" },
+          "userEmail"  :{"type": "keyword" },
+          "orderStatus":{"type": "keyword" },
+          "paymentType":{"type": "keyword" },
           "orderDate"  :{"type": "text" },
           "shippedDate":{"type": "text" },
           "address1"   :{"type": "text" },
@@ -65,10 +65,10 @@
           "orderLines" :{    
             "type"       : "nested",  
             "properties" : {
-                "productId"  : { "type": "text","analyzer": "keyword"    },            
-                "productName": { "type": "text","analyzer": "keyword"    }, 
-                "productType": { "type": "text","analyzer": "keyword"    },
-                "quantity"   : { "type": "integer"},            
+                "productId"  : { "type": "keyword" },            
+                "productName": { "type": "keyword" }, 
+                "productType": { "type": "keyword" },
+                "quantity"   : { "type": "integer" },            
                 "price"      : { "type": "long"   }            
             }
           }  

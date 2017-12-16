@@ -3,6 +3,7 @@ package com.app.service;
 import com.app.model.product.Product;
 import com.app.model.response.BaseResponse;
 import com.app.model.response.MultiMessageResponse;
+import com.app.model.stats.SingleSerise;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -74,7 +75,6 @@ public class ElasticClient {
     
     //Return total and List of Items (if total is -1 it indicates there is some error
     public static <T> Map.Entry<Integer, List<T>>  getTotalAndListFromSearchQueryResponse(Response esResp, Class<T> genericClass)  throws IOException, ParseException {
-
         ObjectMapper mapper = new ObjectMapper();
         Integer total=0;
         List<T> list = new ArrayList<>();
@@ -104,6 +104,39 @@ public class ElasticClient {
         return returnVal;
     }    
     
+
+    //Return Response from group_by aggregation
+    public static Map.Entry<Integer, List<SingleSerise>> getGroupAggrFromResponse(Response esResp, String groupName)  throws IOException, ParseException {
+        Integer total=0;
+        List<SingleSerise> list = new ArrayList<>();
+        JsonNode esRespNode = ElasticClient.getJsonNodeResponse(esResp);
+        Map.Entry<Integer, List<SingleSerise>> returnVal;
+
+        if (esRespNode.has("error")==false) {
+            total = esRespNode.path("hits").path("total").asInt(-1);
+            JsonNode nodeTree =  esRespNode.path("aggregations").path(groupName).path("buckets");
+            if (nodeTree.isArray()){
+                for (int i=0; i < nodeTree.size(); i++){
+                    JsonNode tmpNode = nodeTree.get(i);
+                    SingleSerise s = new SingleSerise(tmpNode.path("key").asText("_key"), tmpNode.path("doc_count").asDouble(0) );
+                    list.add(s);
+                }
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(total, list);
+            }
+            else{
+                returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, list);
+            }
+        }
+        else{
+            returnVal = new AbstractMap.SimpleImmutableEntry<>(-1, list);
+        }
+        return returnVal;
+    }    
+
+
+
+
+
     // Returns no of items deleted and message (0 indicates not found, -1 indicates error and +ve is the count of delete iiems)
     public static Map.Entry<Integer, String> getDeleteByQueryResponse(Response esResp ) {
         ObjectNode respJsonNode = parseResponse(esResp);
