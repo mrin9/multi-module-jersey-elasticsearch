@@ -1,3 +1,4 @@
-# Maven base multi module app with ElasticSearch
+
+# ELasticsearch Backend with Angular frontent 
 
 Work in Progress ...
