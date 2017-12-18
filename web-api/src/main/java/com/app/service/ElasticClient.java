@@ -32,6 +32,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 import org.elasticsearch.client.ResponseException;
 
@@ -105,8 +106,22 @@ public class ElasticClient {
     }    
     
 
-    //Return Response from group_by aggregation
-    public static Map.Entry<Integer, List<SingleSerise>> getGroupAggrFromResponse(Response esResp, String groupName)  throws IOException, ParseException {
+    /**
+     * Returns an entry containing total and the list of buckets from an aggregation query response 
+     * in case of some error in parsing total will contain -1
+     * 
+     * @param esResp Elasticsearch Response object
+     * @param nestedElName if the aggregation is on a nested field, then provide the nested element name 
+     *        else provide a blank string (nested element name is part of elasticsearch query )
+     * @param groupElName Aggregation group element name ( group element name is part of elasticsearch query)
+     * @param bucketElName buckets contain key and doc_count, if any function was is used in the query 
+     *        such as sum or average then those additional elements also be present under the buckets. 
+     *        provide the element name which you are interested or <b>a blank string to get the doc_count</b>
+     * @return an Map entry containing the total and a list of grouped values 
+     * @throws IOException
+     * @throws ParseException 
+     */
+    public static Map.Entry<Integer, List<SingleSerise>> getGroupAggrFromResponse(Response esResp, String nestedElName, String groupElName, String bucketElName)  throws IOException, ParseException {
         Integer total=0;
         List<SingleSerise> list = new ArrayList<>();
         JsonNode esRespNode = ElasticClient.getJsonNodeResponse(esResp);
@@ -114,11 +129,26 @@ public class ElasticClient {
 
         if (esRespNode.has("error")==false) {
             total = esRespNode.path("hits").path("total").asInt(-1);
-            JsonNode nodeTree =  esRespNode.path("aggregations").path(groupName).path("buckets");
+            JsonNode nodeTree ;
+            if (StringUtils.isBlank(nestedElName)){
+                nodeTree =  esRespNode.path("aggregations").path(groupElName).path("buckets");
+            }
+            else{
+                nodeTree =  esRespNode.path("aggregations").path(nestedElName).path(groupElName).path("buckets");
+            }
             if (nodeTree.isArray()){
                 for (int i=0; i < nodeTree.size(); i++){
-                    JsonNode tmpNode = nodeTree.get(i);
-                    SingleSerise s = new SingleSerise(tmpNode.path("key").asText("_key"), tmpNode.path("doc_count").asDouble(0) );
+                    
+                    JsonNode tmpNode = nodeTree.get(i), tmpValNode;
+                    SingleSerise s;
+                    
+                    if (StringUtils.isBlank(bucketElName)){
+                        tmpValNode = tmpNode.path("doc_count");
+                    }
+                    else{
+                        tmpValNode = tmpNode.path(bucketElName).path("value");
+                    }
+                    s = new SingleSerise(tmpNode.path("key").asText("_key"), tmpValNode.asDouble(0) );
                     list.add(s);
                 }
                 returnVal = new AbstractMap.SimpleImmutableEntry<>(total, list);
@@ -132,9 +162,6 @@ public class ElasticClient {
         }
         return returnVal;
     }    
-
-
-
 
 
     // Returns no of items deleted and message (0 indicates not found, -1 indicates error and +ve is the count of delete iiems)

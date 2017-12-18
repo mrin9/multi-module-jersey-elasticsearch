@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class StatsController  extends BaseController {
 
     @GET
-    @Path("/stats/orders/count/by/{groupBy:orderStatus|paymentType}")
+    @Path("/stats/order-count/by/{groupBy:orderStatus|paymentType}")
     @ApiOperation(value = "Order Stats ", response = PageResponse.class)
     public Response groupedOrderCount( @ApiParam(example="orderStatus", allowableValues="orderStatus,paymentType", required=true) @PathParam("groupBy") String groupBy){
         
@@ -44,7 +44,7 @@ public class StatsController  extends BaseController {
             
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             esResp = ElasticClient.rest.performRequest("GET", url, urlParams, submitJsonEntity);
-            Map.Entry<Integer, List<SingleSerise>> aggrList  = ElasticClient.getGroupAggrFromResponse(esResp, "group_by" );
+            Map.Entry<Integer, List<SingleSerise>> aggrList  = ElasticClient.getGroupAggrFromResponse(esResp, "", "group_by", "");
             
             PageResponse resp = new <SingleSerise>PageResponse();
             int total = (int)aggrList.getKey();
@@ -66,41 +66,35 @@ public class StatsController  extends BaseController {
     @GET
     @Path("/stats/total-sales/by/product")
     @ApiOperation(value = "Order Stats ", response = PageResponse.class)
-    public Response totalSalesByProduct( @ApiParam(example="orderStatus", allowableValues="orderStatus,paymentType", required=true) @PathParam("groupBy") String groupBy){
+    public Response totalSalesByProduct(){
         try {
             org.elasticsearch.client.Response esResp;
             String url = "orders/orders/_search?filter_path=hits,aggregations";
             Map<String, String> urlParams = Collections.emptyMap();
             
-            
-
-            
-            
-            
-            String submitData = 
-(" {" +
-"  `size`: 0," +
-"  `aggs`: {" +
-"    `lines`: { " +
-"      `nested`: {`path`: `orderLines`}," +
-"      `aggs`  : {" +
-"        `group_by`: {" +
-"          `terms`: { `field`: `orderLines.productId`}," +
-"          `aggs` : {" +
-"            `totals`: {" +
-"              `sum`: {field`: `orderLines.price`}" +
-"            }" +
-"          }" +
-"        }" +
-"      }" +
-"    }" +
-"  }" +
-"}").replace('`', '"');
-            submitData = String.format(submitData, groupBy );
+            String submitData = (
+            "{"
+            + "  `size`: 0," 
+            + "  `aggs`: {" 
+            + "    `orderLines`: { " 
+            + "      `nested`: {`path`: `orderLines`}," 
+            + "      `aggs`  : {" 
+            + "        `group_by`: {" 
+            + "          `terms`: { `field`: `orderLines.productName`}," 
+            + "          `aggs` : {" 
+            + "            `totals`: {" 
+            + "              `sum`: {`field`: `orderLines.price`}" 
+            + "            }" 
+            + "          }" 
+            + "        }" 
+            + "      }" 
+            + "    }" 
+            + "  }" 
+            + "}").replace('`', '"');
             
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             esResp = ElasticClient.rest.performRequest("GET", url, urlParams, submitJsonEntity);
-            Map.Entry<Integer, List<SingleSerise>> aggrList  = ElasticClient.getGroupAggrFromResponse(esResp, "group_by" );
+            Map.Entry<Integer, List<SingleSerise>> aggrList  = ElasticClient.getGroupAggrFromResponse(esResp, "orderLines", "group_by", "totals");
             
             PageResponse resp = new <SingleSerise>PageResponse();
             int total = (int)aggrList.getKey();
@@ -118,7 +112,54 @@ public class StatsController  extends BaseController {
         }
     }
     
-    
+    @GET
+    @Path("/stats/quantity-ordered/by/product-type")
+    @ApiOperation(value = "Order Stats ", response = PageResponse.class)
+    public Response quantityOrderedByProductType(){
+        try {
+            org.elasticsearch.client.Response esResp;
+            String url = "orders/orders/_search?filter_path=hits,aggregations";
+            Map<String, String> urlParams = Collections.emptyMap();
+            
+            String submitData = (
+            "{"
+            + "  `size`: 0," 
+            + "  `aggs`: {" 
+            + "    `orderLines`: { " 
+            + "      `nested`: {`path`: `orderLines`}," 
+            + "      `aggs`  : {" 
+            + "        `group_by`: {" 
+            + "          `terms`: { `field`: `orderLines.productType`}," 
+            + "          `aggs` : {" 
+            + "            `totals`: {" 
+            + "              `sum`: {`field`: `orderLines.quantity`}" 
+            + "            }" 
+            + "          }" 
+            + "        }" 
+            + "      }" 
+            + "    }" 
+            + "  }" 
+            + "}").replace('`', '"');
+            
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            esResp = ElasticClient.rest.performRequest("GET", url, urlParams, submitJsonEntity);
+            Map.Entry<Integer, List<SingleSerise>> aggrList  = ElasticClient.getGroupAggrFromResponse(esResp, "orderLines", "group_by", "totals");
+            
+            PageResponse resp = new <SingleSerise>PageResponse();
+            int total = (int)aggrList.getKey();
+            resp.setItems(aggrList.getValue());
+            if (resp.getItems() != null){
+                resp.setPageStats(resp.getItems().size(), resp.getItems().size());
+            }
+            return Response.ok(resp).build();
+        }
+        catch (IOException e){
+            log.info("Exeception:[" + e.getClass().getName()+"] " +  e.getMessage()  );
+            log.info("Stack Trace:[" + ExceptionUtils.getStackTrace(e));
+            ObjectNode esRespNode = ElasticClient.parseException(e);
+            return Response.ok(esRespNode).build();
+        }
+    }    
     
     
 }
