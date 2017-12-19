@@ -9,7 +9,7 @@ import lombok.*;
 public class LoginInput {
 
     @ApiModelProperty(value = "User Name", example = "demo")
-    private String  userId;
+    private String  username;
 
     @ApiModelProperty(value = "Password", example = "demo")
     private String  password;

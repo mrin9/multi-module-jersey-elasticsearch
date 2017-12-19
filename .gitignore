@@ -9,3 +9,4 @@ apache-tomcat*
 **/apache-tomcat*/
 elastic*/
 kibana*/
+**/.vscode

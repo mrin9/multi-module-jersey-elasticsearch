@@ -45,7 +45,7 @@ public class UserController extends BaseController{
            + "   }" 
            + " }" 
            + "}").replace('`', '"');
-        submitData = String.format(submitData, loginModel.getUserId() ,loginModel.getPassword());
+        submitData = String.format(submitData, loginModel.getUsername() ,loginModel.getPassword());
         try{
             HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
             org.elasticsearch.client.Response esResp = ElasticClient.rest.performRequest("GET", "/users/users/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
