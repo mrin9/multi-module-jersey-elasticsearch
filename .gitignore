@@ -10,3 +10,4 @@ apache-tomcat*
 elastic*/
 kibana*/
 **/.vscode
+**/node_modules/
