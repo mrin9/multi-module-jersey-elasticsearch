@@ -2,17 +2,16 @@ package com.app.model.user;
 
 import com.app.model.response.BaseResponse;
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
+@Data
 @ApiModel(value = "LoginResponseModel", description="Login response object")
 public class LoginResponse extends BaseResponse {
     
-    private Login data;
+    private Login item;
 	
     public LoginResponse(Login loginUserModel) {
-        setMsgType(MessageTypeEnum.SUCCESS);
-        this.data = loginUserModel;
+        this.setSuccessMessage("Login Success");
+        this.item = loginUserModel;
     }
-
-    public Login getData() {return data;}
-    public void setData(Login data) {this.data = data;}
 }

@@ -177,12 +177,12 @@
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <webResources>
                         <resource>
                             <!-- relative to the pom.xml directory -->
-                            <directory>src/main/resources</directory>
+                            <directory>webui/dist</directory>
                         </resource>
                     </webResources>
                 </configuration>
@@ -196,7 +196,9 @@
                     <showDeprecation>false</showDeprecation>
                 </configuration>
             </plugin>
-
+            
+            
+            <!--
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.2</version>
@@ -208,7 +210,8 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/resources/webui</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${project.basedir}/src/main/public</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/webui/dist</directory>
@@ -221,7 +224,8 @@
                     </execution>
                 </executions>
             </plugin>
-
+            -->
+            
         </plugins>
     </build>
   

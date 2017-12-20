@@ -34,10 +34,20 @@ export class ProductService {
         return productList;
     }
 
-
+    /*
     getProductStatsByQuantityOrdered(): Observable<any> {
         return this.apiRequest.get('api/product-stats-by-quantity');
     }
+    */
+
+    getQuantityOrderedByProductType(): Observable<any> {
+        return this.apiRequest.get('stats/quantity-ordered/by/product-type');
+    }
+
+    getTotalSalesByProduct(): Observable<any> {
+        return this.apiRequest.get('stats/total-sales/by/product' );
+    }
+
 
 
 }

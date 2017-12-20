@@ -18,15 +18,15 @@ export class ProductStatsComponent {
     constructor(private router: Router, private productService: ProductService ) { }
     ngOnInit() {
         var me = this;
-        this.getPageData()
+        this.getPageData();
     }
 
     getPageData() {
         var me = this;
-        me.productService.getProductStatsByQuantityOrdered()
+        me.productService.getQuantityOrderedByProductType()
         .subscribe(function(countryData){
             me.productByQuantityData = countryData.items;
-            console.log("Received Orders By Country");
+            console.log("Received Quantity ordered by product");
         });
     }
 

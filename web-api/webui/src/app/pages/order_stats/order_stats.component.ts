@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../services/api/order.service';
+import { ProductService } from '../../services/api/product.service';
 import { Router } from '@angular/router';
 import { NgxChartsModule} from '@swimlane/ngx-charts';
 import 'rxjs/add/operator/mergeMap';
@@ -23,7 +24,7 @@ export class OrderStatsComponent implements OnInit {
         domain: ['#007cbb']
     }
 
-    constructor(private router: Router, private orderService: OrderService) { }
+    constructor(private router: Router, private orderService: OrderService, private productService: ProductService) { }
 
     ngOnInit() {
         var me = this;
@@ -37,18 +38,18 @@ export class OrderStatsComponent implements OnInit {
          * This is an Example of sequencing RxJS observable using mergeMap
          * (We are sequencing the API calls as the H2 DB used by the backend is failing to serve multiple request at once)
          */
-        me.orderService.getOrderStats("status")
+        me.orderService.getOrderCountStats("orderStatus")
         .mergeMap(function(statusData) {
             me.ordersByStatusData = statusData.items;
-            console.log("Received Orders By Status");
-            return me.orderService.getOrderStats("paytype");
+            console.log("Received order-Count by Status");
+            return me.orderService.getOrderCountStats("paymentType");
         }).mergeMap( function(payTypeData) {
             me.ordersByPaymentData = payTypeData.items;
-            console.log("Received Orders By Payment Type");
-            return me.orderService.getOrderStats("country")
+            console.log("Received order-count by Payment Type");
+            return me.productService.getTotalSalesByProduct()
         }).subscribe(function(countryData){
             me.ordersByCountryData = countryData.items;
-            console.log("Received Orders By Country");
+            console.log("Received Total sales by product");
         });
     }
 

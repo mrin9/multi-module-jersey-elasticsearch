@@ -39,12 +39,12 @@ export class LoginService {
                     //Create a success object that we want to send back to login page
                     loginInfoReturn = {
                         "success"    : true,
-                        "message"    : jsonResp.operationMessage,
+                        "message"    : jsonResp.msg,
                         "landingPage": this.landingPage,
                         "user"       : {
-                            "userId"     : jsonResp.item.userId,
-                            "email"      : jsonResp.item.emailAddress,
-                            "displayName": jsonResp.item.firstName + " " + jsonResp.item.lastName,
+                            "userId"     : jsonResp.item.username,
+                            "email"      : jsonResp.item.emailAddresss,
+                            "displayName": jsonResp.item.username,
                             "token"      : jsonResp.item.token,
                         }
                     };
@@ -56,7 +56,7 @@ export class LoginService {
                     //Create a faliure object that we want to send back to login page
                     loginInfoReturn = {
                         "success":false,
-                        "message":jsonResp.msgDesc,
+                        "message":jsonResp.msg,
                         "landingPage":"/login"
                     };
                 }

@@ -36,7 +36,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /**
  * This is a singleton class
  */
-var AppConfig = (function () {
+var AppConfig = /** @class */ (function () {
     function AppConfig() {
         //Provide all the Application Configs here
         this.version = "1.0.0";
@@ -147,7 +147,7 @@ var routes = [
     { path: 'logout', component: __WEBPACK_IMPORTED_MODULE_4__pages_logout_logout_component__["a" /* LogoutComponent */], data: [{ selectedHeaderItemIndex: -1, selectedSubNavItemIndex: -1 }] },
     { path: '**', component: __WEBPACK_IMPORTED_MODULE_14__pages_404_page_not_found_component__["a" /* PageNotFoundComponent */], data: [{ selectedHeaderItemIndex: -1, selectedSubNavItemIndex: -1 }] }
 ];
-var AppRoutingModule = (function () {
+var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
     }
     AppRoutingModule = __decorate([
@@ -177,7 +177,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-var AppComponent = (function () {
+var AppComponent = /** @class */ (function () {
     function AppComponent() {
     }
     AppComponent = __decorate([
@@ -282,7 +282,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var AppModule = (function () {
+var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
@@ -359,7 +359,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var BadgeComponent = (function () {
+var BadgeComponent = /** @class */ (function () {
     function BadgeComponent() {
     }
     BadgeComponent.prototype.ngOnInit = function () {
@@ -402,7 +402,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var LegendComponent = (function () {
+var LegendComponent = /** @class */ (function () {
     function LegendComponent() {
     }
     __decorate([
@@ -464,7 +464,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var LogoComponent = (function () {
+var LogoComponent = /** @class */ (function () {
     function LogoComponent() {
         this.fontColor = "#63666A";
         this.iconColor = "#E3642B";
@@ -511,7 +511,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
-var TrackScrollDirective = (function () {
+var TrackScrollDirective = /** @class */ (function () {
     function TrackScrollDirective(document) {
         this.document = document;
         this.bottom = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
@@ -585,7 +585,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var HomeComponent = (function () {
+var HomeComponent = /** @class */ (function () {
     function HomeComponent(router, activeRoute, loginService, userInfoService) {
         var _this = this;
         this.router = router;
@@ -696,7 +696,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var PageNotFoundComponent = (function () {
+var PageNotFoundComponent = /** @class */ (function () {
     function PageNotFoundComponent(router, activatedRoute) {
         this.router = router;
         this.activatedRoute = activatedRoute;
@@ -762,7 +762,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var CustomersComponent = (function () {
+var CustomersComponent = /** @class */ (function () {
     function CustomersComponent(router, customerService) {
         this.router = router;
         this.customerService = customerService;
@@ -864,7 +864,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var DashboardComponent = (function () {
+var DashboardComponent = /** @class */ (function () {
     function DashboardComponent() {
     }
     DashboardComponent = __decorate([
@@ -927,7 +927,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var EmployeesComponent = (function () {
+var EmployeesComponent = /** @class */ (function () {
     function EmployeesComponent(router, employeeService) {
         this.router = router;
         this.employeeService = employeeService;
@@ -1011,7 +1011,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var LoginComponent = (function () {
+var LoginComponent = /** @class */ (function () {
     function LoginComponent(router, loginService) {
         this.router = router;
         this.loginService = loginService;
@@ -1109,7 +1109,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var LogoutComponent = (function () {
+var LogoutComponent = /** @class */ (function () {
     function LogoutComponent(router, activatedRoute) {
         this.router = router;
         this.activatedRoute = activatedRoute;
@@ -1179,7 +1179,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var OrderDetailsComponent = (function () {
+var OrderDetailsComponent = /** @class */ (function () {
     function OrderDetailsComponent(route, router, formBuilder, orderService) {
         /*
         this.frmOrderDetail = this.formBuilder.group({
@@ -1331,7 +1331,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/pages/order_stats/order_stats.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"s-order-dash-pg\">\n    <div class=\"chart-box\">\n      <h4> Orders by Status </h4>\n      <ngx-charts-advanced-pie-chart\n        style=\"position:relative\"\n        [view]=\"view\"\n        [scheme]=\"colorScheme\"\n        [results]=\"ordersByStatusData\"\n      >\n      </ngx-charts-advanced-pie-chart>\n    </div>\n\n    <div class=\"chart-box\">\n      <h4> Orders By Payment Type </h4>\n      <ngx-charts-advanced-pie-chart\n        style=\"position:relative\"\n        [view]=\"view\"\n        [scheme]=\"colorScheme\"\n        [results]=\"ordersByPaymentData\"\n      >\n      </ngx-charts-advanced-pie-chart>\n    </div>\n\n  <div class=\"chart-box\">\n    <h4> Orders By Country </h4>\n        <ngx-charts-bar-vertical\n            [view]=\"[990, 270]\"\n            [barPadding]=\"1\"\n            [scheme]=\"barColorScheme\"\n            [results]=\"ordersByCountryData\"\n            [roundDomains]=\"true\"\n            [showGridLines]=\"true\"\n            [xAxis]=\"true\"\n            [yAxis]=\"true\"\n            [legend]=\"false\"\n            [roundEdges]=\"false\"\n        >\n        </ngx-charts-bar-vertical>\n  </div>\n\n<!--ngx-datatable\n  style='height:248px; width:585px;margin:16px;border-radius:2px;'\n  [rows]=\"rows\"\n  [columns]=\"columns\"\n  [headerHeight]=\"45\"\n  [rowHeight]=\"32\"\n  [columnMode]=\"'standard'\"\n  [scrollbarV]=\"false\"\n  >\n  </ngx-datatable-->\n\n\n\n</div>\n"
+module.exports = "<div class=\"s-order-dash-pg\">\n    <div class=\"chart-box\">\n      <h4> Order count by status </h4>\n      <ngx-charts-advanced-pie-chart\n        style=\"position:relative\"\n        [view]=\"view\"\n        [scheme]=\"colorScheme\"\n        [results]=\"ordersByStatusData\"\n      >\n      </ngx-charts-advanced-pie-chart>\n    </div>\n\n    <div class=\"chart-box\">\n      <h4> Order count by payment type </h4>\n      <ngx-charts-advanced-pie-chart\n        style=\"position:relative\"\n        [view]=\"view\"\n        [scheme]=\"colorScheme\"\n        [results]=\"ordersByPaymentData\"\n      >\n      </ngx-charts-advanced-pie-chart>\n    </div>\n\n  <div class=\"chart-box\">\n    <h4> Total sales by product </h4>\n        <ngx-charts-bar-vertical\n            [view]=\"[990, 270]\"\n            [barPadding]=\"1\"\n            [scheme]=\"barColorScheme\"\n            [results]=\"ordersByCountryData\"\n            [roundDomains]=\"true\"\n            [showGridLines]=\"true\"\n            [xAxis]=\"true\"\n            [yAxis]=\"true\"\n            [legend]=\"false\"\n            [roundEdges]=\"false\"\n        >\n        </ngx-charts-bar-vertical>\n  </div>\n\n<!--ngx-datatable\n  style='height:248px; width:585px;margin:16px;border-radius:2px;'\n  [rows]=\"rows\"\n  [columns]=\"columns\"\n  [headerHeight]=\"45\"\n  [rowHeight]=\"32\"\n  [columnMode]=\"'standard'\"\n  [scrollbarV]=\"false\"\n  >\n  </ngx-datatable-->\n\n\n\n</div>\n"
 
 /***/ }),
 
@@ -1342,8 +1342,9 @@ module.exports = "<div class=\"s-order-dash-pg\">\n    <div class=\"chart-box\">
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OrderStatsComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_api_order_service__ = __webpack_require__("../../../../../src/app/services/api/order.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_mergeMap__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/mergeMap.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_api_product_service__ = __webpack_require__("../../../../../src/app/services/api/product.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_mergeMap__ = __webpack_require__("../../../../rxjs/_esm5/add/operator/mergeMap.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1357,10 +1358,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var OrderStatsComponent = (function () {
-    function OrderStatsComponent(router, orderService) {
+
+var OrderStatsComponent = /** @class */ (function () {
+    function OrderStatsComponent(router, orderService, productService) {
         this.router = router;
         this.orderService = orderService;
+        this.productService = productService;
         this.view = [460, 180];
         this.ordersByStatusData = [];
         this.ordersByPaymentData = [];
@@ -1382,18 +1385,18 @@ var OrderStatsComponent = (function () {
          * This is an Example of sequencing RxJS observable using mergeMap
          * (We are sequencing the API calls as the H2 DB used by the backend is failing to serve multiple request at once)
          */
-        me.orderService.getOrderStats("status")
+        me.orderService.getOrderCountStats("orderStatus")
             .mergeMap(function (statusData) {
             me.ordersByStatusData = statusData.items;
-            console.log("Received Orders By Status");
-            return me.orderService.getOrderStats("paytype");
+            console.log("Received order-Count by Status");
+            return me.orderService.getOrderCountStats("paymentType");
         }).mergeMap(function (payTypeData) {
             me.ordersByPaymentData = payTypeData.items;
-            console.log("Received Orders By Payment Type");
-            return me.orderService.getOrderStats("country");
+            console.log("Received order-count by Payment Type");
+            return me.productService.getTotalSalesByProduct();
         }).subscribe(function (countryData) {
             me.ordersByCountryData = countryData.items;
-            console.log("Received Orders By Country");
+            console.log("Received Total sales by product");
         });
     };
     OrderStatsComponent = __decorate([
@@ -1402,7 +1405,7 @@ var OrderStatsComponent = (function () {
             template: __webpack_require__("../../../../../src/app/pages/order_stats/order_stats.component.html"),
             styles: [__webpack_require__("../../../../../src/app/pages/order_stats/order_stats.scss")],
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */], __WEBPACK_IMPORTED_MODULE_1__services_api_order_service__["a" /* OrderService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */], __WEBPACK_IMPORTED_MODULE_1__services_api_order_service__["a" /* OrderService */], __WEBPACK_IMPORTED_MODULE_2__services_api_product_service__["a" /* ProductService */]])
     ], OrderStatsComponent);
     return OrderStatsComponent;
 }());
@@ -1458,7 +1461,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var OrdersComponent = (function () {
+var OrdersComponent = /** @class */ (function () {
     function OrdersComponent(router, orderService) {
         this.router = router;
         this.orderService = orderService;
@@ -1485,7 +1488,7 @@ var OrdersComponent = (function () {
         var me = this;
         var legendColors = { "On Hold": '#ef2e2e', "Shipped": '#ff8e28', "Complete": '#61c673', "New": '#007cbb' };
         me.isLoading = true;
-        me.orderService.getOrderStats("status")
+        me.orderService.getOrderCountStats("orderStatus")
             .mergeMap(function (statusData) {
             me.orderByStatusData = statusData.items.map(function (v, i, a) {
                 return { name: v.name, value: v.value, color: legendColors[v.name] };
@@ -1543,7 +1546,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/pages/product_stats/product_stats.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"s-product-dash-pg\">\n\n    <div class=\"chart-box\">\n        <h4> Products By Quantity Ordered</h4>\n        <ngx-charts-bar-vertical\n            [view]=\"[990, 270]\"\n            [barPadding]=\"1\"\n            [scheme]=\"barColorScheme\"\n            [results]=\"productByQuantityData\"\n            [roundDomains]=\"true\"\n            [showGridLines]=\"true\"\n            [xAxis]=\"true\"\n            [yAxis]=\"true\"\n            [legend]=\"false\"\n            [roundEdges]=\"false\"\n        >\n        </ngx-charts-bar-vertical>\n    </div>\n\n</div>\n"
+module.exports = "<div class=\"s-product-dash-pg\">\n\n    <div class=\"chart-box\">\n        <h4> Quantity ordered by product</h4>\n        <ngx-charts-bar-vertical\n            [view]=\"[990, 270]\"\n            [barPadding]=\"1\"\n            [scheme]=\"barColorScheme\"\n            [results]=\"productByQuantityData\"\n            [roundDomains]=\"true\"\n            [showGridLines]=\"true\"\n            [xAxis]=\"true\"\n            [yAxis]=\"true\"\n            [legend]=\"false\"\n            [roundEdges]=\"false\"\n        >\n        </ngx-charts-bar-vertical>\n    </div>\n\n</div>\n"
 
 /***/ }),
 
@@ -1567,7 +1570,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ProductStatsComponent = (function () {
+var ProductStatsComponent = /** @class */ (function () {
     function ProductStatsComponent(router, productService) {
         this.router = router;
         this.productService = productService;
@@ -1580,10 +1583,10 @@ var ProductStatsComponent = (function () {
     };
     ProductStatsComponent.prototype.getPageData = function () {
         var me = this;
-        me.productService.getProductStatsByQuantityOrdered()
+        me.productService.getQuantityOrderedByProductType()
             .subscribe(function (countryData) {
             me.productByQuantityData = countryData.items;
-            console.log("Received Orders By Country");
+            console.log("Received Quantity ordered by product");
         });
     };
     ProductStatsComponent = __decorate([
@@ -1646,7 +1649,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ProductsComponent = (function () {
+var ProductsComponent = /** @class */ (function () {
     function ProductsComponent(router, productService) {
         this.router = router;
         this.productService = productService;
@@ -1738,7 +1741,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ApiRequestService = (function () {
+var ApiRequestService = /** @class */ (function () {
     function ApiRequestService(appConfig, http, router, userInfoService) {
         this.appConfig = appConfig;
         this.http = http;
@@ -1837,7 +1840,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var CustomerService = (function () {
+var CustomerService = /** @class */ (function () {
     function CustomerService(apiRequest, translate) {
         this.apiRequest = apiRequest;
         this.translate = translate;
@@ -1897,7 +1900,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var EmployeeService = (function () {
+var EmployeeService = /** @class */ (function () {
     function EmployeeService(apiRequest, translate) {
         this.apiRequest = apiRequest;
         this.translate = translate;
@@ -1951,7 +1954,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var LoginService = (function () {
+var LoginService = /** @class */ (function () {
     function LoginService(router, userInfoService, apiRequest) {
         this.router = router;
         this.userInfoService = userInfoService;
@@ -1969,16 +1972,16 @@ var LoginService = (function () {
         var loginInfoReturn; // Object that we want to send back to Login Page
         this.apiRequest.post('login', bodyData)
             .subscribe(function (jsonResp) {
-            if (jsonResp !== undefined && jsonResp !== null && jsonResp.operationStatus === "SUCCESS") {
+            if (jsonResp !== undefined && jsonResp !== null && jsonResp.msgType === "SUCCESS") {
                 //Create a success object that we want to send back to login page
                 loginInfoReturn = {
                     "success": true,
-                    "message": jsonResp.operationMessage,
+                    "message": jsonResp.msg,
                     "landingPage": _this.landingPage,
                     "user": {
-                        "userId": jsonResp.item.userId,
-                        "email": jsonResp.item.emailAddress,
-                        "displayName": jsonResp.item.firstName + " " + jsonResp.item.lastName,
+                        "userId": jsonResp.item.username,
+                        "email": jsonResp.item.emailAddresss,
+                        "displayName": jsonResp.item.username,
                         "token": jsonResp.item.token,
                     }
                 };
@@ -1989,7 +1992,7 @@ var LoginService = (function () {
                 //Create a faliure object that we want to send back to login page
                 loginInfoReturn = {
                     "success": false,
-                    "message": jsonResp.msgDesc,
+                    "message": jsonResp.msg,
                     "landingPage": "/login"
                 };
             }
@@ -2043,7 +2046,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var OrderService = (function () {
+var OrderService = /** @class */ (function () {
     function OrderService(apiRequest, translate) {
         this.apiRequest = apiRequest;
         this.translate = translate;
@@ -2097,8 +2100,8 @@ var OrderService = (function () {
         });
         return orderDetailSubject;
     };
-    OrderService.prototype.getOrderStats = function (field) {
-        return this.apiRequest.get('api/order-stats/' + field);
+    OrderService.prototype.getOrderCountStats = function (field) {
+        return this.apiRequest.get('stats/order-count/by/' + field);
     };
     OrderService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -2137,7 +2140,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ProductService = (function () {
+var ProductService = /** @class */ (function () {
     function ProductService(apiRequest, translate) {
         this.apiRequest = apiRequest;
         this.translate = translate;
@@ -2162,8 +2165,16 @@ var ProductService = (function () {
         });
         return productList;
     };
-    ProductService.prototype.getProductStatsByQuantityOrdered = function () {
+    /*
+    getProductStatsByQuantityOrdered(): Observable<any> {
         return this.apiRequest.get('api/product-stats-by-quantity');
+    }
+    */
+    ProductService.prototype.getQuantityOrderedByProductType = function () {
+        return this.apiRequest.get('stats/quantity-ordered/by/product-type');
+    };
+    ProductService.prototype.getTotalSalesByProduct = function () {
+        return this.apiRequest.get('stats/total-sales/by/product');
     };
     ProductService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -2195,7 +2206,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var TranslateService = (function () {
+var TranslateService = /** @class */ (function () {
     function TranslateService(appConfig) {
         this.appConfig = appConfig;
         // Code to get Locale Info from Session Storage
@@ -2239,7 +2250,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var AuthGuard = (function () {
+var AuthGuard = /** @class */ (function () {
     function AuthGuard(router, loginService, userInfoService) {
         this.router = router;
         this.loginService = loginService;
@@ -2291,7 +2302,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var UserInfoService = (function () {
+var UserInfoService = /** @class */ (function () {
     function UserInfoService() {
         this.currentUserKey = "currentUser";
         this.storage = sessionStorage; // <--- you may switch between sessionStorage or LocalStrage (only one place to change)

@@ -40,7 +40,7 @@ export class OrdersComponent implements OnInit {
         var me = this;
         let legendColors = {"On Hold":'#ef2e2e', "Shipped":'#ff8e28', "Complete":'#61c673', "New":'#007cbb'};
         me.isLoading=true;
-        me.orderService.getOrderStats("status")
+        me.orderService.getOrderCountStats("orderStatus")
         .mergeMap(function(statusData){
             me.orderByStatusData = statusData.items.map(function(v,i,a){
                 return {name:v.name, value:v.value, color:legendColors[v.name]}

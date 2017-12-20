@@ -64,9 +64,11 @@ export class OrderService {
         return orderDetailSubject;
     }
 
-    getOrderStats(field:string): Observable<any> {
-        return this.apiRequest.get('api/order-stats/' + field );
+
+    getOrderCountStats(field:string): Observable<any> {
+        return this.apiRequest.get('stats/order-count/by/' + field );
     }
+
 
 
 }
