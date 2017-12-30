@@ -23,16 +23,15 @@ export class OrdersComponent implements OnInit {
         var me = this;
         me.getPageData();
         this.columns=[
-            {prop:"orderId"         , name: "ID"           , width:65, cellTemplate: this.orderIdTpl   },
-            {prop:"orderDate"       , name: "Order Date"   , width:105 },
-            {prop:"orderStatus"     , name: "Status"       , width:85, cellTemplate: this.statusCellTpl },
-            {prop:"customerName"    , name: "Name"         , width:150 },
-            {prop:"customerEmail"   , name: "Email"        , width:200 },
-            {prop:"customerCompany" , name: "Company"      , width:110 },
-            {prop:"paymentType"     , name: "Pay Type"     , width:80  },
-            {prop:"paidDate"        , name: "Pay Date"     , width:105 },
-            {prop:"shippedDate"     , name: "Ship Date"    , width:105 },
-            {prop:"shipCountry"     , name: "Ship Country" , width:110 }
+            {prop:"orderId"     , name: "ID"             , width:65, cellTemplate: this.orderIdTpl   },
+            {prop:"orderDate"   , name: "Order Date"     , width:105 },
+            {prop:"orderStatus" , name: "Status"         , width:85, cellTemplate: this.statusCellTpl },
+            {prop:"userName"    , name: "Name"           , width:150 },
+            {prop:"userEmail"   , name: "Email"          , width:200 },
+            {prop:"paymentType" , name: "Pay Type"       , width:80  },
+            {prop:"shippedDate" , name: "Shipped Date"   , width:105 },
+            {prop:"country"     , name: "Shipped Country", width:145 },
+            {prop:"totalPrice"  , name: "Total Price"    , width:110 }
         ];
     }
 

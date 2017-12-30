@@ -11,20 +11,19 @@ export class ProductService {
         private translate:TranslateService
     ) {}
 
-    getProducts(page?:number, size?:number): Observable<any> {
+    getProducts(from?:number, size?:number): Observable<any> {
         //Create Request URL params
         let me = this;
         let params: HttpParams = new HttpParams();
-        params = params.append('page', typeof page === "number"? page.toString():"0");
+        params = params.append('from', typeof from === "number"? from.toString():"0");
         params = params.append('size', typeof size === "number"? size.toString():"1000");
 
         let productList = new Subject<any>(); // Will use this subject to emit data that we want
-        this.apiRequest.get('api/products',params)
+        this.apiRequest.get('products',params)
             .subscribe(jsonResp => {
                 let returnObj = jsonResp.items.map(function(v, i, a){
                     let newRow = Object.assign({}, v, {
-                        listPrice   : me.translate.getCurrencyString(v.listPrice),
-                        standardCost: me.translate.getCurrencyString(v.standardCost)
+                        listPrice   : me.translate.getCurrencyString(v.listPrice)
                     });
                     return newRow;
                 });

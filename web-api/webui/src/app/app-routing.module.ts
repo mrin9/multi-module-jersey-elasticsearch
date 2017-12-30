@@ -12,7 +12,6 @@ import { ProductsComponent     }   from './pages/products/products.component';
 import { CustomersComponent    }   from './pages/customers/customers.component';
 import { OrdersComponent       }   from './pages/orders/orders.component';
 import { OrderDetailsComponent }   from './pages/order_details/order_details.component';
-import { EmployeesComponent    }   from './pages/employees/employees.component';
 
 import { AuthGuard } from './services/auth_guard.service';
 import { PageNotFoundComponent }  from './pages/404/page-not-found.component';
@@ -39,8 +38,7 @@ export const routes: Routes = [
         { path:'orders'    , component: OrdersComponent      , data:[{selectedHeaderItemIndex:1, selectedSubNavItemIndex:-1}]  },
         { path:'orders/:id', component: OrderDetailsComponent, data:[{selectedHeaderItemIndex:1, selectedSubNavItemIndex:-1}]  },
         { path:'products'  , component: ProductsComponent    , data:[{selectedHeaderItemIndex:2, selectedSubNavItemIndex:-1}]  },
-        { path:'customers' , component: CustomersComponent   , data:[{selectedHeaderItemIndex:3, selectedSubNavItemIndex:-1}]  },
-        { path:'employees' , component: EmployeesComponent   , data:[{selectedHeaderItemIndex:4, selectedSubNavItemIndex:-1}]  },
+        { path:'customers' , component: CustomersComponent   , data:[{selectedHeaderItemIndex:3, selectedSubNavItemIndex:-1}]  }
     ]
   },
   { path: 'login' , component: LoginComponent       , data:[{selectedHeaderItemIndex:-1, selectedSubNavItemIndex:-1}] },

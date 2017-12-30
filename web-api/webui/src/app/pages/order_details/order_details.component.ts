@@ -85,18 +85,15 @@ export class OrderDetailsComponent implements OnInit {
         this.frmOrderDetail = this.formBuilder.group({
             customerName   : ['',Validators.required],
             customerEmail  : ['',Validators.required],
-            customerCompany: ['',Validators.required],
             orderStatus    : ['',Validators.required],
             orderDate      : ['',Validators.required],
             paymentType    : [''],
-            paidDate       : [''],
             shipAddress1   : ['',Validators.required],
             shipAddress2   : ['',Validators.required],
             shipCity       : ['',Validators.required],
             shipCountry    : ['',Validators.required],
             shipState      : ['',Validators.required],
-            shippedDate    : ['',Validators.required],
-            shippedFee     : ['',Validators.required],
+            shippedDate    : ['',Validators.required]
         });
         this.getData();
 
@@ -112,25 +109,19 @@ export class OrderDetailsComponent implements OnInit {
         .subscribe(function(resp){
             console.log("Order details", resp[0]);
             me.frmOrderDetail.setValue({
-                customerName   : [resp[0].customerName],
-                customerEmail  : [resp[0].customerEmail],
-                customerCompany: [resp[0].customerCompany],
+                customerName   : [resp[0].userName],
+                customerEmail  : [resp[0].userEmail],
                 orderStatus    : [resp[0].orderStatus],
                 orderDate      : [resp[0].orderDate],
                 paymentType    : [resp[0].paymentType],
-                paidDate       : [resp[0].paidDate],
-                shipAddress1   : [resp[0].shipAddress1],
-                shipAddress2   : [resp[0].shipAddress2],
-                shipCity       : [resp[0].shipCity],
-                shipCountry    : [resp[0].shipCountry],
-                shipState      : [resp[0].shipState],
-                shippedDate    : [resp[0].shippedDate],
-                shippedFee     : [resp[0].shippingFee]
+                shipAddress1   : [resp[0].address1],
+                shipAddress2   : [resp[0].address2],
+                shipCity       : [resp[0].city],
+                shipCountry    : [resp[0].country],
+                shipState      : [resp[0].state],
+                shippedDate    : [resp[0].shippedDate]
             });
             me.orderDetailsRec = resp[0];
-
-
-
         });
     }
 

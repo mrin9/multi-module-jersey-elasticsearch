@@ -35,7 +35,6 @@ import { ProductsComponent     } from './pages/products/products.component';
 import { CustomersComponent    } from './pages/customers/customers.component';
 import { OrdersComponent       } from './pages/orders/orders.component';
 import { OrderDetailsComponent } from './pages/order_details/order_details.component';
-import { EmployeesComponent    } from './pages/employees/employees.component';
 
 
 // Services
@@ -47,7 +46,7 @@ import { TranslateService } from './services/api/translate.service';
 import { LoginService     } from './services/api/login.service';
 import { OrderService     } from './services/api/order.service';
 import { ProductService   } from './services/api/product.service';
-import { CustomerService  } from './services/api/customer.service';
+import { UserService      } from './services/api/user.service';
 import { EmployeeService  } from './services/api/employee.service';
 
 
@@ -86,7 +85,6 @@ import { EmployeeService  } from './services/api/employee.service';
     ProductStatsComponent,
     OrderStatsComponent,
     ProductsComponent,
-    EmployeesComponent,
     CustomersComponent,
     OrdersComponent,
     OrderDetailsComponent,
@@ -103,7 +101,7 @@ import { EmployeeService  } from './services/api/employee.service';
     LoginService,
     OrderService,
     ProductService,
-    CustomerService,
+    UserService,
     EmployeeService,
     AppConfig,
   ],

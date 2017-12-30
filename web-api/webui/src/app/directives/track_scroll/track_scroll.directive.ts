@@ -14,7 +14,7 @@ export class TrackScrollDirective {
              this.bottom.emit(true);
         }
         */
-        if (Math.abs(document.body.scrollHeight - (window.scrollY + window.innerHeight)) <= 100){
+        if (Math.abs(document.body.scrollHeight - (window.scrollY + window.innerHeight)) <= 5){
             this.bottom.emit(true);
         }
     }

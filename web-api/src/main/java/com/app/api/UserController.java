@@ -79,8 +79,8 @@ public class UserController extends BaseController{
     public Response search( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
-        @ApiParam(value="sort field, prefix with '-' for descending order", example="-userName", defaultValue="")  @QueryParam("sort")  String sort, 
-        @QueryParam("filter") String filter
+        @ApiParam(value="true for getting only customers", example="false", defaultValue="false" , required=true)  @DefaultValue("false") @QueryParam("only-customers")  boolean onlyCustomers,
+        @ApiParam(value="sort field, prefix with '-' for descending order", example="-userName", defaultValue="")  @QueryParam("sort")  String sort
     ){
         
         if (from<=0){from=0;}

@@ -15,14 +15,14 @@ export class OrderService {
     /**
      * Gets List of orders
      */
-    getOrderInfo(page?:number, size?:number): Observable<any> {
+    getOrderInfo(from?:number, size?:number): Observable<any> {
         //Create Request URL params
         let me = this;
         let params: HttpParams = new HttpParams();
-        params = params.append('page', typeof page === "number"? page.toString():"0");
+        params = params.append('from', typeof from === "number"? from.toString():"0");
         params = params.append('size', typeof size === "number"? size.toString():"1000");
         let orderListSubject = new Subject<any>(); // Will use this subject to emit data that we want
-        this.apiRequest.get('api/orders',params)
+        this.apiRequest.get('orders',params)
             .subscribe(jsonResp => {
                 let returnObj = jsonResp.items.map(function(v, i, a){
                     let newRow = Object.assign({}, v, {
@@ -43,24 +43,27 @@ export class OrderService {
     getOrderDetails(orderId:number): Observable<any> {
         //Create Request URL params
         let me = this;
-        let params: HttpParams = new HttpParams();
-        if (orderId){
-            params = params.append('orderid', orderId.toString());
-        }
+        let url:string = "";
         let orderDetailSubject = new Subject<any>(); // Will use this subject to emit data that we want
-        this.apiRequest.get('api/order-details',params)
-            .subscribe(jsonResp => {
-                let returnObj = jsonResp.items.map(function(v, i, a){
-                    let newRow = Object.assign({}, v, {
-                        orderDate  : me.translate.getDateString(v.orderDate),
-                        paidDate   : me.translate.getDateString(v.paidDate),
-                        shippedDate: me.translate.getDateString(v.shippedDate)
+        if (orderId){
+            url= "orders/"+orderId.toString();
+            this.apiRequest.get(url)
+                .subscribe(jsonResp => {
+                    let returnObj = jsonResp.items.map(function(v, i, a){
+                        let newRow = Object.assign({}, v, {
+                            orderDate  : me.translate.getDateString(v.orderDate),
+                            paidDate   : me.translate.getDateString(v.paidDate),
+                            shippedDate: me.translate.getDateString(v.shippedDate)
+                        });
+                        return newRow;
                     });
-                    return newRow;
+                    orderDetailSubject.next(returnObj); // incidentList is a Subject and emits an event thats being listened to by the components
                 });
-                orderDetailSubject.next(returnObj); // incidentList is a Subject and emits an event thats being listened to by the components
-            });
-
+        }
+        else{
+            let empty={orderId:'',orderLines:[]};
+            orderDetailSubject.next(empty)
+        }
         return orderDetailSubject;
     }
 

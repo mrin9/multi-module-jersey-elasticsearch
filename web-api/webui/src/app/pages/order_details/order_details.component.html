@@ -8,15 +8,14 @@
                 <clr-tab-content>
                     <br/>
                     <table class="s-order-header">
-                        <tr><td style="width:125px">Customer     </td> <td> {{orderDetailsRec.customerName}} ({{orderDetailsRec.customerId}}) </td></tr>
-                        <tr><td>Email        </td> <td> {{orderDetailsRec.customerEmail}} </td></tr>
+                        <tr><td style="width:125px">Customer</td> <td> {{orderDetailsRec.userName}} ({{orderDetailsRec.customerId}}) </td></tr>
+                        <tr><td>Email        </td> <td> {{orderDetailsRec.userEmail}} </td></tr>
                         <tr><td>Order Status </td> <td> {{orderDetailsRec.orderStatus}} </td></tr>
                     </table>
                     <table class="s-order-line table" style="width:100%;">
                         <thead>
                             <tr>
                                 <th class="left" style="width:60px;">Code</th>
-                                <th class="left" style="width:110px;">Line Status</th>
                                 <th class="left" style="width:200px;">Product Name</th>
                                 <th class="left" style="width:150px;">Category</th>
                                 <th class="right" style="width:90px;">Quantity</th>
@@ -25,13 +24,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let o of orderDetailsRec.orderLine">
-                                <td class="left">{{o.productCode}}</td>
-                                <td class="left">{{o.orderItemStatus}}</td>
+                            <tr *ngFor="let o of orderDetailsRec.orderLines">
+                                <td class="left">{{o.productId}}</td>
                                 <td class="left">{{o.productName}}</td>
-                                <td class="left">{{o.category}}</td>
+                                <td class="left">{{o.productId}}</td>
                                 <td class="right">{{o.quantity}}</td>
-                                <td class="right">{{o.unitPrice}}</td>
+                                <td class="right">{{o.price}}</td>
                                 <td style="width:40px;"><clr-icon shape="edit"  class="is-info"></clr-icon></td>
                                 <td style="width:40px;"><clr-icon shape="trash" class="is-error"></clr-icon></td>
                             </tr>
@@ -48,10 +46,6 @@
                             <tr>
                                 <td style="width:125px;">Shipped Date </td>
                                 <td><input colspan="2" type="text" formControlName="shippedDate" style="width:120px"></td>
-                            </tr>
-                            <tr>
-                                <td>Fee</td>
-                                <td colspan="2"><input type="text" formControlName="shippedFee" style="width:60px"> </td>
                             </tr>
                             <tr>
                                 <td>Address</td>

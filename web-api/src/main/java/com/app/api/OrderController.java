@@ -32,7 +32,7 @@ public class OrderController extends BaseController{
     @PermitAll
     //@RolesAllowed({"USER", "ADMIN"})
     @ApiOperation(value = "Serach Orders ", response = PageResponse.class)
-    public Response search( 
+    public Response getOrders( 
         @ApiParam(example="0"  , defaultValue="0" , required=true) @DefaultValue("1")  @QueryParam("from") int from,
         @ApiParam(example="5"  , defaultValue="5" , required=true) @DefaultValue("5")  @QueryParam("size") int size, 
         @ApiParam(value="sort field, prefix with '-' for descending order", example="-totalPrice", defaultValue="")  @QueryParam("sort")  String sort, 
@@ -81,7 +81,35 @@ public class OrderController extends BaseController{
 
     }
     
-    
+    @GET 
+    @Path("/orders/{orderId}")
+    @PermitAll
+    //@RolesAllowed({"USER", "ADMIN"})
+    @ApiOperation(value = "Get Single Order", response = PageResponse.class)
+    public Response getOrderDetails(@ApiParam(example="O1", required=true) @DefaultValue("")  @PathParam("orderId") String orderId) {
+        
+        org.elasticsearch.client.Response esResp;
+        Map<String, String> urlParams = Collections.emptyMap();
+
+        String submitData = ("{" 
+            + "  `query`:{" 
+            + "    `term`:{ `orderId`: `%s` }"
+            + "  }" 
+            + "}").replace('`', '"');
+        submitData = String.format(submitData, orderId);
+        
+        try {
+            HttpEntity submitJsonEntity = new NStringEntity(submitData, ContentType.APPLICATION_JSON);
+            esResp = ElasticClient.rest.performRequest("GET", "/orders/orders/_search?filter_path=hits.total,hits.hits._source", urlParams, submitJsonEntity);
+            PageResponse resp = new <Order>PageResponse();
+            resp.updateFromSearchResponse(esResp, Order.class, 0, 1);
+            return Response.ok(resp).build();
+        }
+        catch (IOException ex) {
+            return Response.ok(ElasticClient.parseException(ex)).build();
+        }
+
+    }
     @DELETE 
     @Path("/orders/{orderId}")
     @PermitAll
