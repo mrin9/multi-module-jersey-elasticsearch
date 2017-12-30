@@ -16,6 +16,7 @@ export class UserService {
         let params: HttpParams = new HttpParams();
         params = params.append('from', typeof from === "number"? from.toString():"0");
         params = params.append('size', typeof size === "number"? size.toString():"1000");
+        params = params.append('only-customers', "true");
 
         let customerListSubject = new Subject<any>(); // Will use this subject to emit data that we want
 

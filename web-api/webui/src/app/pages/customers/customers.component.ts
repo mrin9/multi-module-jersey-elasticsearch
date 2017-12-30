@@ -10,8 +10,6 @@ import { UserService } from '../../services/api/user.service';
 
 export class CustomersComponent implements OnInit {
 
-
-
     columns:any[];
     rows:any[];
     pageSize:number=5;

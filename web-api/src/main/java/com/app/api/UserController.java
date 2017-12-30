@@ -82,18 +82,28 @@ public class UserController extends BaseController{
         @ApiParam(value="true for getting only customers", example="false", defaultValue="false" , required=true)  @DefaultValue("false") @QueryParam("only-customers")  boolean onlyCustomers,
         @ApiParam(value="sort field, prefix with '-' for descending order", example="-userName", defaultValue="")  @QueryParam("sort")  String sort
     ){
-        
+        String submitData="", sortClause="", fieldName="", direction="";
         if (from<=0){from=0;}
         if (size==0 || size >500){size=500;}
 
         Map<String, String> urlParams = Collections.emptyMap();
-        String submitData = ("{" 
-            + "   `from` :%s" 
-            + "  ,`size` :%s" 
-            + "  ,`query`:{`match_all`:{} }" 
-            + "  ,`sort` :[%s]"
-            + "}").replace('`', '"');
-        String sortClause="", fieldName="", direction="";
+        if (onlyCustomers){
+            submitData = ("{" 
+                + "   `from` :%s" 
+                + "  ,`size` :%s" 
+                + "  ,`query`:{`term`:{ `role`: `CUSTOMER` } }" 
+                + "  ,`sort` :[%s]"
+                + "}").replace('`', '"');
+        }
+        else{
+            submitData = ("{" 
+                + "   `from` :%s" 
+                + "  ,`size` :%s" 
+                + "  ,`query`:{`match_all`:{} }" 
+                + "  ,`sort` :[%s]"
+                + "}").replace('`', '"');
+        }
+        
         if (StringUtils.isNotBlank(sort)){
             sort = sort.trim();
             if (sort.startsWith("-")){
