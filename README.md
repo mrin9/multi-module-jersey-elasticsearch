@@ -1,4 +1,4 @@
 
 # ELasticsearch Backend with Angular frontend
 
-Work in Progress ...
+The project expects Elasticserach service is running at port 9200, in the same machine
